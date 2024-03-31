@@ -1,0 +1,134 @@
+Dash_brd:
+<Dash_brd>:
+
+	canvas.before:
+		Color:
+		    rgba: 1, 1, 1, 1  # red
+		Rectangle:
+		    pos: self.pos
+		    size: root.w, 700
+		    #source: "dashboard2.png"
+		Color:
+		    rgba: 1, 1, 1, 1  # red
+		Rectangle:
+		    pos: 844, 336
+		    size: 25, root.w
+		    #source: "dashboard2.png"
+		Color:
+		    rgba: 1, 1, 1, 1  # red
+		Rectangle:
+		    pos: 898, 336
+		    size: 25, root.w
+		    #source: "dashboard2.png"
+
+		Color:
+		    rgba: 1, 1, 1, 1  # red
+		Rectangle:
+		    pos: 959, 336
+		    size: 25, root.w
+		    #source: "dashboard2.png"
+
+		Color:
+		    rgba: 1, 1, 1, 1  # red
+		Rectangle:
+		    pos: 1016, 336
+		    size: 25, root.w
+		    #source: "dashboard2.png"
+
+		Color:
+		    rgba: 1, 1, 1, 1  # red
+		Rectangle:
+		    pos: 1075, 336
+		    size: 25, root.w
+		    #source: "dashboard2.png"
+
+
+    canvas:
+        Color:
+		    rgba: 1, 1, 1, 1  # red
+		Rectangle:
+		    pos: self.pos
+		    size: self.size
+		    source: "dashboard_retro_style_vw2.png"
+	MDFloatLayout:
+		pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+		MDLabel:
+			id: speed
+			pos_hint: {"center_x": 0.45, "center_y": 0.55}
+			halign:'center'
+			text: " 120 "
+			font_name: 'LCD14'
+			font_size: 150
+			markup: True
+
+		MDLabel:
+
+			text: "km/h"
+			font_size: 40
+			pos_hint: {"center_x": 0.665, "center_y": 0.5}
+			font_name: 'TickingTimebombBB'
+			halign:'center'
+		MDLabel:
+			id: odo
+			text: "125000"
+			font_size: 64
+			pos_hint: {"center_x": 0.35, "center_y": 0.23}
+			font_name: 'TickingTimebombBB'
+			halign:'center'
+		MDLabel:
+
+			text: "km"
+			font_size: 20
+			pos_hint: {"center_x": 0.44, "center_y": 0.22}
+			font_name: 'TickingTimebombBB'
+			halign:'center'
+
+		MDLabel:
+
+			text: "time"
+			font_size: 24
+			pos_hint: {"center_x": 0.085, "center_y": 0.22}
+			font_name: 'TickingTimebombBB'
+			halign:'center'
+
+
+		MDLabel:
+			id: time
+			text: "12:50"
+			font_size: 48
+			pos_hint: {"center_x": 0.15, "center_y": 0.225}
+			font_name: 'TickingTimebombBB'
+			halign:'center'
+
+	MDFloatLayout:
+		Image:
+			size_hint: 0.15, 0.15
+			source: "vw_logo.png"
+			pos_hint: {"x": 0, "y": 0.6}
+
+	#MDFloatLayout:
+		Image:
+			size_hint: 0.05, 0.05
+			source: "turbo2.png"
+			pos_hint: {"x": 0.69, "y": 0.42}
+
+		Image:
+			size_hint: 0.06, 0.06
+			source: "oil_pressure2.png"
+			pos_hint: {"x": 0.735, "y": 0.41}
+
+		Image:
+			size_hint: 0.047, 0.047
+			source: "oil_temperature.png"
+			pos_hint: {"x": 0.788, "y": 0.42}
+
+		Image:
+			size_hint: 0.047, 0.047
+			source: "temp.png"
+			pos_hint: {"x": 0.834, "y": 0.42}
+
+		Image:
+			size_hint: 0.043, 0.043
+			source: "petrol2.png"
+			pos_hint: {"x": 0.887, "y": 0.42}

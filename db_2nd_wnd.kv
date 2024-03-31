@@ -1,0 +1,353 @@
+Suspension:
+<Suspension>:
+    #MDBoxLayout:
+    #    orientation: "horizontal"
+
+    MDLabel:
+        pos_hint: {"center_x": 0.5, "center_y": 0.93}
+        halign: "center"
+        text: " Suspension, brakes, wheels control "
+        font_name: 'TickingTimebombBB'
+        theme_text_color: "Custom"
+        text_color: "white"
+        font_size: 48
+
+    MDFloatLayout:
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        canvas.before:
+            Color:
+                rgba: 1,1,1,0.25
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: "background.png"
+        
+            Color:
+                rgba: 1,1,1,1
+            Rectangle:
+                size: 700, 300
+                pos: 50, 330
+                source: "box2.png"
+
+            Color:
+                rgba: 1,1,1,1
+            Rectangle:
+                size: 700, 300
+                pos: 50, 40
+                source: "box3.png"
+                
+        MDLabel:
+            pos_hint: {"center_x": 0.35, "center_y": 0.85}
+            halign: "center"
+            text: " Clearance system control "
+            font_name: 'TickingTimebombBB'
+            theme_text_color: "Custom"
+            text_color: "white"
+            font_size: 24
+
+
+        MDFloatLayout:
+            size_hint: 1, 1
+            id: frame
+            pos_hint: {"center_x": 0.5, "center_y": 0.49}
+            Image:
+                id: body_frame
+                pos_hint: {"center_x": 0.25, "center_y": 0.7}
+                size_hint: 0.4, 0.4
+                source: 'stock_with_out_wheels.png'
+                canvas.before:
+                    #InstructionGroup:
+                    PushMatrix:
+
+                    Rotate:
+                        group: 'rotate'
+
+                        angle: root.data
+                        origin: 500, 420
+                        axis: 0,0,1
+                canvas.after:
+                    PopMatrix:
+                        
+
+        MDFloatLayout:
+
+            size_hint: 0.6, 0.75
+
+            pos_hint: {"center_x": 0.234, "center_y": 0.65}
+            Image:
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                size_hint: 0.55, 0.55
+                source: 'wheels_with_out_frame.png'          
+
+
+    MDFloatLayout:
+       #pos_hint: {"center_x": 0.75, "center_y": 0.5}
+       #MDFloatLayout:
+
+        MDSlider:
+            id: front_clearance
+            pos_hint: {"center_x": 0.15, "center_y": 0.6}
+            orientation: "horizontal"
+            size_hint_x: 0.15
+            min:-75
+            max: 75
+            value: 0
+            on_touch_move: root.val()
+
+        MDLabel:
+        
+            pos_hint: {"center_x": 0.15, "center_y": 0.55}
+            halign: "center"
+            text: "front clearance"
+            font_name: 'TickingTimebombBB'
+            theme_text_color: "Custom"
+            text_color: "white"
+            font_size: 24
+
+    MDFloatLayout:
+        MDSlider:
+            id: back_axes
+            pos_hint: {"center_x": 0.33, "center_y": 0.6}
+            orientation: "horizontal"
+            size_hint_x: 0.15
+            min:-75   
+            max: 75   
+            value: 0  
+            #border_horizontal: 0, 18, 18, 0
+            #on_touch_move: root.back_axes_val()
+
+        MDLabel:                                              
+                                                              
+            pos_hint: {"center_x": 0.33, "center_y": 0.55}
+            halign: "center"                                  
+            text: "back clearance"
+            font_name: 'TickingTimebombBB'                    
+            theme_text_color: "Custom"                        
+            text_color: "white"                               
+            font_size: 24
+
+    MDFloatLayout:
+        MDSlider:
+            id: common_clearance
+            pos_hint: {"center_x": 0.42, "center_y": 0.73}
+            orientation: "vertical"
+            hint: True
+            hint_text_color: "green"
+            color: "green"
+            min:-75
+            max: 75
+            value: 0
+            #track_color_active: "green"
+            track_color_disabled: "blue"
+            size_hint_y: 0.2
+            border_horizontal: 0, 18, 18, 0
+            on_touch_move: root.common_clearance()
+
+        MDLabel:
+            pos_hint: {"center_x": 0.51, "center_y": 0.73}
+            halign: "center"
+            text: "common clearance"
+            font_name: 'TickingTimebombBB'
+            theme_text_color: "Custom"
+            text_color: "white"
+            font_size: 24
+
+    MDFloatLayout:
+
+        size_hint: 0.75, 0.75
+
+        pos_hint: {"center_x": 0.8, "center_y": 0.5}
+        canvas.before:                         
+            Color:                             
+                rgba: 1,1,1,1
+            Rectangle:                         
+                size: 380, 500
+                pos: 770, 130
+                source: "box.png"
+
+        
+        MDLabel:
+            pos_hint: {"center_x": 0.5, "center_y": 0.95}
+            halign: "center"
+            text: "tire pressure control"
+            font_name: 'TickingTimebombBB'
+            theme_text_color: "Custom"
+            text_color: "white"
+            font_size: 24
+
+        Image:
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            size_hint: 1, 1
+            source: 'brakes.png'           
+
+        MDLabel:
+            pos_hint: {"center_x": 0.35, "center_y": 0.75}
+            halign: "center"
+            text: "2 bar"
+            font_name: 'TickingTimebombBB'
+            theme_text_color: "Custom"
+            text_color: "white"
+            font_size: 24
+
+        MDLabel:
+            pos_hint: {"center_x": 0.65, "center_y": 0.75}
+            halign: "center"
+            text: "2 bar"
+            font_name: 'TickingTimebombBB'
+            theme_text_color: "Custom"
+            text_color: "white"
+            font_size: 24
+
+        MDLabel:
+            pos_hint: {"center_x": 0.35, "center_y": 0.25}
+            halign: "center"
+            text: "2 bar"
+            font_name: 'TickingTimebombBB'
+            theme_text_color: "Custom"
+            text_color: "white"
+            font_size: 24
+
+        MDLabel:
+            pos_hint: {"center_x": 0.65, "center_y": 0.25}
+            halign: "center"
+            text: "2 bar"
+            font_name: 'TickingTimebombBB'
+            theme_text_color: "Custom"
+            text_color: "white"
+            font_size: 24
+
+    MDFloatLayout:
+        size_hint: 0.5, 0.5
+        pos_hint: {"center_x": 0.25, "center_y": 0.25}
+        MDLabel:
+            pos_hint: {"center_x": 0.65, "center_y": 0.85}
+            halign: "center"
+            text: " Brake system control "
+            font_name: 'TickingTimebombBB'
+            theme_text_color: "Custom"
+            text_color: "white"
+            font_size: 24
+
+        Image:
+            pos_hint: {"center_x": 0.4, "center_y": 0.5}
+            size_hint: 0.75, 0.75
+            source: 'brakes_system.png'
+
+        MDFloatLayout:
+            size_hint: 0.5, 1
+            pos_hint: {"center_x": 0.9, "center_y": 0.5}
+
+            MDGridLayout:
+                size_hint: 0.8, 0.75
+                pos_hint: {"center_x": 0.5, "center_y": 0.4}
+                cols: 3
+                row_force_default: True
+                row_default_height: 30
+                cols_force_default: True
+                cols_default_width: 75
+                padding: [10,10,10,10]
+
+
+                MDLabel:
+                    #size_hint_x:None
+                    #width: 75
+
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    halign: "center"
+                    text: "Front brake pads"
+                    font_name: 'TickingTimebombBB'
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    font_size: 14
+                MDLabel:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    halign: "center"
+                    text: "ok "
+                    font_name: 'TickingTimebombBB'
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    font_size: 14
+
+                Image:
+                    pos_hint: {"center_x": 0.4, "center_y": 0.5}
+                    size_hint: 0.2,0.2
+                    source: 'brake-pad.png'
+
+
+
+
+                MDLabel:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    halign: "center"
+                    text: "rear brake pads "
+                    font_name: 'TickingTimebombBB'
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    font_size: 14
+
+                MDLabel:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    halign: "center"
+                    text: "ok "
+                    font_name: 'TickingTimebombBB'
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    font_size: 14
+
+                Image:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    size_hint: 0.2 ,0.2
+                    source: 'brake-pad.png'
+
+                MDLabel:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    halign: "center"
+                    text: "brake fluid level "
+                    font_name: 'TickingTimebombBB'
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    font_size: 14
+                MDLabel:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    halign: "center"
+                    text: "ok "
+                    font_name: 'TickingTimebombBB'
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    font_size: 14
+                Image:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    size_hint: 0.2 ,0.2
+                    source: 'brake-fluid-level.png'
+
+                    
+
+                MDLabel:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    halign: "left"
+                    text: "ABS system"
+                    font_name: 'TickingTimebombBB'
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    font_size: 14
+                MDLabel:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    halign: "center"
+                    text: "ok "
+                    font_name: 'TickingTimebombBB'
+                    theme_text_color: "Custom"
+                    text_color: "white"
+                    font_size: 14
+
+
+
+
+
+
+                Image:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    size_hint: 0.2 ,0.2
+                    source: 'abs.png'
+
+

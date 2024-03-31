@@ -1,0 +1,87 @@
+
+GPS:
+	Dash_Board:
+
+	Map:
+
+	LBl:
+
+	Speedometr:
+		id: speedometr
+	Tachometr:
+		id: tachometr
+	Digital_box:
+
+<Dash_Board>:
+
+
+<LBl>:
+	id: lbl
+	canvas:
+		InstructionGroup:
+			id: circles
+		Color:
+			rgba: 0.1,0.1,0.1,1
+		Ellipse:
+			size: 380,380
+			pos: 70, 163
+			#group: "circle"
+		Color:
+			rgba: 0.1,0.1,0.1,1
+		Ellipse:
+			size:  380,380
+			pos: 746, 162
+
+<Map>:
+	MDAnchorLayout:
+		id: map
+		size_hint: 0.65, 0.45
+		pos_hint: {"center_x": 0.5, "center_y": 0.5}
+		MapView:
+
+			pos_hint: {"center_x": 0.5, "center_y": 0.5}
+			size:  self.parent.size
+			zoom:15
+			lat: '55.736061'
+			lon: '11.509603'
+			MapMarkerPopup:
+				lat: '55.736061'
+				lon: '11.509603'
+
+<Speedometr>:
+
+	Image:
+		id: speed_img
+		source: "speedometr.png"
+		size_hint: None, None
+		size: 400, 400
+		#pos_hint: None, None
+		pos: 55, 157
+
+	Image:
+		id: arrow1
+		source: "arrow3.png"
+		size_hint: None, None
+		size: 513/2.5, 139/2.5
+
+		pos: 87, 328
+
+
+<Tachometr>:
+	Image:
+		id: tacho_img
+		source: "tachometr.png"
+		size_hint: None, None
+		size: 400, 400
+		#pos_hint: None, None
+		pos: 740, 155
+
+	Image:
+		id: arrow2
+		source: "arrow3.png"
+		size_hint: None, None
+		size: 513/2.5, 139/2.5
+		#pos_hint: None, None
+		pos: 770, 326
+
+<Digital_box>:

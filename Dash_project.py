@@ -2,7 +2,7 @@ import re
 import threading
 import time
 from io import BytesIO
-
+import obd
 import numpy as np
 import requests
 import serial
@@ -49,17 +49,20 @@ from datetime import datetime
 from kivy_garden.graph import Graph, MeshLinePlot, LinePlot
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from kivy_garden.mapview import MapView, MapMarkerPopup
-import pyrebase
+#import pyrebase
+from kivy.core.text import LabelBase
 
-LabelBase.register("01_DigiGraphics", fn_regular="C:\\Users\\admin\PycharmProjects\\dashpanel\\01-digitgraphics\\01_DigiGraphics.mtt")
+LabelBase.register("01_DigiGraphics", fn_regular="C:\\Users\\dimap_000\\PycharmProjects\\Car_Dashboard_with_web_access\\01-digitgraphics\\01_DigiGraphics.mtt")
                                         #"C:\Users\admin\PycharmProjects\smart home\01-digitgraphics\01_DigiGraphics.mtt"
 Window.size = (1200,700)
 
 class Main(MDFloatLayout):
     pass
 class Dash_Board(MDFloatLayout):
-    val = 0
-
+    rpm = 0
+    speed = 0
+    t = 0
+    fuel = 0
 class Classic_style_dash_board(MDScreen):
     latitude = NumericProperty()
     longitude = NumericProperty()
@@ -96,26 +99,26 @@ class Classic_style_dash_board(MDScreen):
         Clock.schedule_interval(self.update_widget, 0.01)
 
     def update_widget(self, dt):
-        if int(self.val_pattern.val) > 10 and not self.scheduled and not self.scheduled_2:
+        if float(self.val_pattern.speed) > 10 and not self.scheduled and not self.scheduled_2:
             self.remove_widget(self.stock_box)
             self.add_widget(self.map, 4)
             self.scheduled = True
             self.scheduled_2 = True
 
-        elif int(self.val_pattern.val) <= 10 and not self.scheduled and self.scheduled_2:
+        elif float(self.val_pattern.speed) <= 10 and not self.scheduled and self.scheduled_2:
             self.remove_widget(self.map)
             self.add_widget(self.stock_box)
 
             self.scheduled = True
             self.scheduled_2 = False
 
-        elif int(self.val_pattern.val) <= 10 and self.scheduled:
+        elif float(self.val_pattern.speed) <= 10 and self.scheduled:
             self.scheduled = False
 
     def start(self, *args):
 
-        self.read_data = self.data.readline()
-        self.read_data = self.read_data.decode()
+        #self.read_data = self.data.readline()
+        #self.read_data = self.read_data.decode()
 
         digits = re.findall(r"-?\d+\.\d+|-?\d+", self.read_data)
         self.longitude = digits[0]
@@ -286,14 +289,6 @@ class Speedometr(MDFloatLayout):
         super(Speedometr, self).__init__(**kwargs)
         self.val_data = Dash_Board()
         self.speed = Speed_rpm_labels()
-        #self.label = MDLabel(
-        #    text = 'str(self.val_data.val)',
-        #    font_size = "75",
-        #    pos_hint = {"center_x": 0.5, "center_y": 0.2},
-        #    halign = 'center',
-        #    id = "speed_label"
-        #    )
-        #self.add_widget(self.label)
         Clock.schedule_interval(self.update_value, 0.01)
 
     def on_touch_down(self, touch):
@@ -314,10 +309,10 @@ class Speedometr(MDFloatLayout):
             Ellipse(pos=(102, 102), size=(85, 85))
 
     def update_value(self, *args):
-        self.w = str(Dash_Board.val * 250 / 670)
+        self.w = float(Dash_Board.speed) * 260 / 200
 class Tachometr(MDFloatLayout):
     w = NumericProperty(0)
-
+    rpm_lbl = StringProperty()
     def on_touch_down(self, touch):
         changes1 = Animation(size=(200, 200), pos=(956, 44), duration=1.0, t='in_out_elastic')
         arrow1 = Animation(size=(513 / 5, 139 / 5), pos=(970, 130), duration=1.0, t='in_out_elastic')
@@ -339,7 +334,8 @@ class Tachometr(MDFloatLayout):
             Ellipse(size=(220, 220), pos = (825,245))
 
     def update_value(self, *args):
-        self.w = str(Dash_Board.val * 250 / 600)
+        self.w = float(Dash_Board.rpm) * 260 / 7000
+
 
 class Speed_rpm_labels(MDFloatLayout):
     kmh = NumericProperty(0)
@@ -351,7 +347,8 @@ class Speed_rpm_labels(MDFloatLayout):
         
 
     def update_label(self, dt):
-        self.kmh = self.val_data.val
+        self.ids.speed_lbl.text = str(self.val_data.speed)
+        self.ids.rpm_lbl.text = str(round(float(Dash_Board.rpm)))
         #print(self.kmh)
 
 class Sport_style_dash_board(MDScreen):
@@ -369,9 +366,9 @@ class Sport_style_dash_board(MDScreen):
         self.add_widget(Gauge_tank())
 
     def update_data(self, *args):
-        self.x_rpm_scale = Dash_Board.val
-        self.ids.speed.text = str(round(Dash_Board.val/1.5))
-        self.ids.rpm.text = str(round(Dash_Board.val*15))
+        self.x_rpm_scale = float(Dash_Board.rpm)*240/7000
+        self.ids.speed.text = str(round(float(Dash_Board.speed)))
+        self.ids.rpm.text = str(round(float(Dash_Board.rpm)))
 
     def on_touch_down(self, touch):
         #print(touch.pos)
@@ -450,7 +447,7 @@ class Gauge_temp(MDFloatLayout):
 
     def coolant_temp(self, dt):
         n = np.random.randint(0, 100)
-        self.x_coolant_temp = n
+        self.x_coolant_temp = int(Dash_Board.t)*180/110
 
 class Gauge_tank(MDFloatLayout):
     x_tank = NumericProperty()
@@ -664,12 +661,14 @@ class Engine(MDScreen):
     #    self.graph.add_plot(self.plot)
     #    self.ids.engine_fuel_cons.add_widget(self.graph)
 class Dashboard_project(MDApp):
-    Dash_Board.val = 0
+    #Dash_Board.val = 0
     cnt = True
     def build(self):
-
-
-        Clock.schedule_interval(self.data, 0.1)
+        #obd.logger.setLevel(obd.logging.DEBUG)
+        #self.connection = obd.OBD(portstr="COM3", fast=False, timeout=30)
+        self.connection = obd.OBD(portstr="COM9")
+        #self.Arduino_Data = serial.Serial("com2", 115200)
+        Clock.schedule_interval(self.data, 0.01)
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Red"
 
@@ -682,28 +681,41 @@ class Dashboard_project(MDApp):
         return sm
 
     def data(self, dt):
-        if self.cnt:
-            Dash_Board.val += 1
-            if Dash_Board.val >= 250:
-                self.cnt = False
-        else:
-            Dash_Board.val = Dash_Board.val - 1
-            if Dash_Board.val <= 0:
-                self.cnt =True
-        print(Dash_Board.val)
-        #self.Arduino_Data = serial.Serial("com9", 9600)
+        rpm = str(self.connection.query(obd.commands.RPM))
+        Dash_Board.rpm = re.findall(r"-?\d+\.\d+|-?\d+", rpm)
+        Dash_Board.rpm = Dash_Board.rpm[0]
+        print(Dash_Board.rpm)
+        speed = str(self.connection.query(obd.commands.SPEED))
+        Dash_Board.speed = re.findall(r"-?\d+\.\d+|-?\d+", speed)
+        Dash_Board.speed = Dash_Board.speed[0]
+        print(Dash_Board.speed)
+        t = str(self.connection.query(obd.commands.COOLANT_TEMP))
+        Dash_Board.t = re.findall(r"-?\d+\.\d+|-?\d+", t)
+        Dash_Board.t = Dash_Board.t[0]
+        print(Dash_Board.t)
+
+    #    if self.cnt:
+    #        Dash_Board.val += 1
+    #        if Dash_Board.val >= 250:
+    #            self.cnt = False
+    #    else:
+    #        Dash_Board.val = Dash_Board.val - 1
+    #        if Dash_Board.val <= 0:
+    #            self.cnt =True
+    #    print(Dash_Board.val)
+
         #threading.Thread(target=self._arduino_thread, daemon=True).start()
 
-    def _arduino_thread(self):
+    #def _arduino_thread(self):
 
-        while True:
 
-            self.read_data = self.Arduino_Data.readline()
-            self.read_data = self.read_data.decode()
-            self.digits = re.findall(r"-?\d+\.\d+|-?\d+", self.read_data)
-            if self.digits:
-                Dash_Board.val = int(self.digits[0])
 
+        #self.read_data = self.Arduino_Data.readline()
+        #self.read_data = self.read_data.decode("cp1252")
+        #self.digits = re.findall(r"-?\d+\.\d+|-?\d+", self.read_data)
+        #if self.digits:
+        #    Dash_Board.val = self.digits[0]
+        #    print(Dash_Board.val)
     #def test_data(self):
 
 

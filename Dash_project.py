@@ -52,8 +52,9 @@ from kivy_garden.mapview import MapView, MapMarkerPopup
 #import pyrebase
 from kivy.core.text import LabelBase
 
-LabelBase.register("01_DigiGraphics", fn_regular="C:\\Users\\dimap_000\\PycharmProjects\\Car_Dashboard_with_web_access\\01-digitgraphics\\01_DigiGraphics.mtt")
-                                        #"C:\Users\admin\PycharmProjects\smart home\01-digitgraphics\01_DigiGraphics.mtt"
+LabelBase.register("01_DigiGraphics", fn_regular="C:\\Users\\admin\\PycharmProjects\\dashpanel\\01-digitgraphics\\01_DigiGraphics.mtt")
+LabelBase.register("Hemi-Head", fn_regular="C:\\Users\\admin\\PycharmProjects\\dashpanel\\Hemi-Head\\Hemi Head\\hemi head bd it.ttf")
+LabelBase.register("lcd14", fn_regular="C:\\Users\\admin\\PycharmProjects\\dashpanel\\lcd\\lcd-font\\otf\\LCD14.otf")                                        #"C:\Users\admin\PycharmProjects\smart home\01-digitgraphics\01_DigiGraphics.mtt"
 Window.size = (1200,700)
 
 class Main(MDFloatLayout):
@@ -237,8 +238,6 @@ class Scale(MDFloatLayout):
 class Ruler(MDFloatLayout):
     pass
 class Map(MDFloatLayout):
-
-
     pass
 class LBl(MDFloatLayout):
     def __init__(self, **kwargs):
@@ -309,9 +308,9 @@ class Speedometr(MDFloatLayout):
             Ellipse(pos=(102, 102), size=(85, 85))
 
     def update_value(self, *args):
-        self.w = float(Dash_Board.speed) * 260 / 200
+        self.w = float(Dash_Board.speed) * 260 / 200    #----------------> speedometer's arrow
 class Tachometr(MDFloatLayout):
-    w = NumericProperty(0)
+    rpm = NumericProperty(0)
     rpm_lbl = StringProperty()
     def on_touch_down(self, touch):
         changes1 = Animation(size=(200, 200), pos=(956, 44), duration=1.0, t='in_out_elastic')
@@ -334,9 +333,7 @@ class Tachometr(MDFloatLayout):
             Ellipse(size=(220, 220), pos = (825,245))
 
     def update_value(self, *args):
-        self.w = float(Dash_Board.rpm) * 260 / 7000
-
-
+        self.rpm = float(Dash_Board.rpm) * 243 / 7000
 class Speed_rpm_labels(MDFloatLayout):
     kmh = NumericProperty(0)
     def __init__(self,  **kwargs):
@@ -350,7 +347,6 @@ class Speed_rpm_labels(MDFloatLayout):
         self.ids.speed_lbl.text = str(self.val_data.speed)
         self.ids.rpm_lbl.text = str(round(float(Dash_Board.rpm)))
         #print(self.kmh)
-
 class Sport_style_dash_board(MDScreen):
     x_rpm_scale = NumericProperty()
     rotate = NumericProperty()
@@ -366,7 +362,7 @@ class Sport_style_dash_board(MDScreen):
         self.add_widget(Gauge_tank())
 
     def update_data(self, *args):
-        self.x_rpm_scale = float(Dash_Board.rpm)*240/7000
+        self.x_rpm_scale = float(Dash_Board.rpm)*246/7000
         self.ids.speed.text = str(round(float(Dash_Board.speed)))
         self.ids.rpm.text = str(round(float(Dash_Board.rpm)))
 
@@ -448,7 +444,7 @@ class Gauge_temp(MDFloatLayout):
     def coolant_temp(self, dt):
         n = np.random.randint(0, 100)
         self.x_coolant_temp = int(Dash_Board.t)*180/110
-
+        self.ids.temp_label.text = str(Dash_Board.t)
 class Gauge_tank(MDFloatLayout):
     x_tank = NumericProperty()
 
@@ -683,15 +679,15 @@ class Dashboard_project(MDApp):
     def data(self, dt):
         rpm = str(self.connection.query(obd.commands.RPM))
         Dash_Board.rpm = re.findall(r"-?\d+\.\d+|-?\d+", rpm)
-        Dash_Board.rpm = Dash_Board.rpm[0]
+        Dash_Board.rpm = 4000 #Dash_Board.rpm[0]
         print(Dash_Board.rpm)
         speed = str(self.connection.query(obd.commands.SPEED))
         Dash_Board.speed = re.findall(r"-?\d+\.\d+|-?\d+", speed)
-        Dash_Board.speed = Dash_Board.speed[0]
+        Dash_Board.speed = 5#Dash_Board.speed[0]
         print(Dash_Board.speed)
         t = str(self.connection.query(obd.commands.COOLANT_TEMP))
         Dash_Board.t = re.findall(r"-?\d+\.\d+|-?\d+", t)
-        Dash_Board.t = Dash_Board.t[0]
+        Dash_Board.t = 90 #Dash_Board.t[0]
         print(Dash_Board.t)
 
     #    if self.cnt:

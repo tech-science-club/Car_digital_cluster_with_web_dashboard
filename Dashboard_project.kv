@@ -32,18 +32,27 @@ Main:
 
 
 <Classic_style_dash_board>:
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 1  # red
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: "vecteezy_mpty-racing-track-with-illuminated-lights-in-night-empty_22695456.jpg"
 
 <Sport_style_dash_board>:
-	canvas.before:
-		Color:
-		    rgba: 0, 0, 0, 1  # red
-		Ellipse:
-		    pos: self.x+300, self.y-75
-		    size: 600, 600
+    
+
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 1  # red
+        Ellipse:
+            pos: self.x+300, self.y+50
+            size: 600, 600
         Color:
             rgba: 0+root.x_rpm_scale/240, 1-root.x_rpm_scale/240, 0, 1  # red
         Ellipse:
-            pos: self.x+300, self.y-75
+            pos: self.x+300, self.y+50
             size: 600, 600
             angle_start: 237
             angle_end: 237+root.x_rpm_scale
@@ -51,66 +60,69 @@ Main:
         Color:
             rgba: 0, 0, 0, 1
         Ellipse:
-            pos: self.x+350, self.y-25
+            pos: self.x+350, self.y+100
             size: 500, 500
 
         Color:
             rgba: 1,1,1,1
         Rectangle:
-            pos: self.x+375, self.y
+            pos: self.x+375, self.y+125
             size: 450, 450
             source: "central_ring2.png"
         Color:
-            rgba: 1,1,1,1
+            rgba: 0,0,1,1
         Rectangle:
-            pos: 528, 310
+            pos: 523, 440
             size: 155, 67
             source: "rpm_label.png"
-	canvas:
-		Color:
-		    rgba: 1, 1, 1, 1  # red
-		Rectangle:
-		    pos: self.x+300, self.y -75
-		    size: 600, 600
-		    source: "rpm.png"
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 1  # red
+        Rectangle:
+            pos: self.x+300, self.y+50
+            size: 600, 600
+            source: "rpm.png"
 
-	MDLabel:
-		id: speed
-		pos_hint: {"center_x": 0.5, "center_y": 0.3}
-		#pos: 500, 250
-		halign:'center'
-		text: "000"
-		font_name: 'TickingTimebombBB'
-		font_size: 170
-		markup: True
+    MDLabel:
+        id: speed
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        #pos: 500, 250
+        halign:'center'
+        text: "000"
+        font_name: "Hemi-Head"
+        font_size: 160
+        markup: True
 
-	MDLabel:
+    MDLabel:
 
-		text: "km/h"
+        text: "km/h"
 
-		font_size: 40
-        pos_hint: {"center_x": 0.58, "center_y": 0.2}
-		#pos: 600, 220
-		font_name: 'TickingTimebombBB'
-		halign:'center'
+        font_size: 40
+        pos_hint: {"center_x": 0.5, "center_y": 0.35}
+        #pos: 600, 220
+        font_name: "Hemi-Head"
+        halign:'center'
 
-	MDLabel:
-		id: rpm
-		pos_hint: {"center_x": 0.5, "center_y": 0.5}
-		halign:'center'
-		text: "0000"
-		font_name: 'TickingTimebombBB'
-		font_size: 50
-		markup: True
+    MDLabel:
+        id: rpm
+        pos_hint: {"center_x": 0.5, "center_y": 0.692}
+        halign:'center'
+        text: "0000"
+        font_name: "Hemi-Head"
+        font_size: 50
+        markup: True
 
-	MDLabel:
-		pos_hint: {"center_x": 0.55, "center_y": 0.46}
-		halign:'center'
-		text: "RPM"
-		font_name: 'TickingTimebombBB'
-		font_size: 32
-		markup: True
-
+    MDLabel:
+        pos_hint: {"center_x": 0.54, "center_y": 0.645}
+        halign:'center'
+        text: "RPM"
+        font_name: "Hemi-Head"
+        font_size: 24
+        markup: True
+    FitImage:
+        pos: 0, 0
+        size_hint_y: 0.20
+        source: "road_to_horizont.png"
 
 <Gauge_temp>:
 	canvas.before:
@@ -142,6 +154,23 @@ Main:
 		size_hint: 0.05, 0.05
 		source: "temp.png"
 		pos: 72, 250
+    MDLabel:
+
+        pos_hint: {"center_x": 0.115, "center_y": 0.4}
+        halign:'center'
+        text: "°C"
+        font_name: 'lcd14'
+        font_size: 20
+        markup: True
+    MDLabel:
+        id: temp_label
+        pos_hint: {"center_x": 0.06, "center_y": 0.4}
+        halign:'center'
+        text: "0"
+        font_name: 'lcd14'
+        font_size: 20
+        markup: True
+
 
 <Gauge_tank>:
     canvas.before:
@@ -635,7 +664,7 @@ Main:
 <Tachometr>:
 	Image:
 		id: tacho_img
-		source: "tachometr.png"
+		source: 'tacho3.png' #"tachometr.png"
 		size_hint: None, None
 		size: 400, 400
 		#pos_hint: None, None
@@ -655,7 +684,7 @@ Main:
             Rotate:
                 #group: 'rotate'
 
-                angle: 28 - root.w
+                angle: 28 - root.rpm
                 origin: 941, 358
                 axis: 0,0,1
         canvas.after:
@@ -687,14 +716,14 @@ Main:
 		halign:'center'
 		text: "0"
 		font_name: '01_DigiGraphics'
-		font_size: 75
+		font_size: 60
 		markup: True
 
 	MDLabel:
 
 		pos_hint: {"center_x": 0.78, "center_y": 0.42}
 		halign:'center'
-		text: "RPM x10"
+		text: "RPM"
 		font_name: '01_DigiGraphics'
 		font_size: 24
 		markup: True

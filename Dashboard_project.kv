@@ -45,6 +45,12 @@ Main:
 
     canvas.before:
         Color:
+            rgba: 1, 1, 1, 0.5  # red
+        Rectangle:
+            size: self.size
+            pos: self.pos
+            source: "speed.png"
+        Color:
             rgba: 0, 0, 0, 1  # red
         Ellipse:
             pos: self.x+300, self.y+50
@@ -119,10 +125,11 @@ Main:
         font_name: "Hemi-Head"
         font_size: 24
         markup: True
-    FitImage:
-        pos: 0, 0
-        size_hint_y: 0.20
-        source: "road_to_horizont.png"
+    #FitImage:
+    #    pos: self.pos
+    #    size: self.size
+    #    #size_hint_y: 0.20
+    #    source: "road_city.png"
 
 <Gauge_temp>:
 	canvas.before:
@@ -383,7 +390,7 @@ Main:
             Rotate:
                 #group: 'rotate'
 
-                angle: 0
+                angle: root.temp_angle
                 origin: 118, 527
                 axis: 0,0,1
         canvas.after:
@@ -416,7 +423,7 @@ Main:
             Rotate:
                 #group: 'rotate'
 
-                angle: 0
+                angle: root.oil_temp_angle
                 origin: 118, 527
                 axis: 0,0,1
         canvas.after:
@@ -446,7 +453,7 @@ Main:
             Rotate:
                 #group: 'rotate'
 
-                angle: 0
+                angle: root.volt_angle
                 origin: 118, 527
                 axis: 0,0,1
         canvas.after:
@@ -476,7 +483,7 @@ Main:
             Rotate:
                 #group: 'rotate'
 
-                angle: 0
+                angle: root.oil_pressure_angle
                 origin: 118, 527
                 axis: 0,0,1
         canvas.after:
@@ -506,7 +513,7 @@ Main:
             Rotate:
                 #group: 'rotate'
 
-                angle: 0
+                angle: root.turbo_angle
                 origin: 118, 527
                 axis: 0,0,1
         canvas.after:

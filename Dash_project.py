@@ -1,9 +1,7 @@
 import re
-from threading import Thread
+import threading
 import time
 from io import BytesIO
-
-#import Tread as Tread
 import obd
 import numpy as np
 import requests
@@ -49,24 +47,34 @@ from kivy.network.urlrequest import UrlRequest
 from kivy.uix.image import Image
 from datetime import datetime
 from kivy_garden.graph import Graph, MeshLinePlot, LinePlot
-from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
+from kivy_garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from kivy_garden.mapview import MapView, MapMarkerPopup
-#import pyrebase
+# import pyrebase
 from kivy.core.text import LabelBase
+from matplotlib import pyplot as plt
 
-LabelBase.register("01_DigiGraphics", fn_regular="C:\\Users\\dimap_000\\PycharmProjects\\Car_Dashboard_with_web_access\\01-digitgraphics\\01_DigiGraphics.mtt")
-LabelBase.register("Hemi-Head", fn_regular="C:\\Users\\dimap_000\\PycharmProjects\\Car_Dashboard_with_web_access\\Hemi-Head\\Hemi Head\\hemi head bd it.ttf")
-LabelBase.register("lcd14", fn_regular="C:\\Users\\dimap_000\\PycharmProjects\\Car_Dashboard_with_web_access\\lcd\\lcd-font\\otf\\LCD14.otf")#"C:\\Users\\admin\\PycharmProjects\\dashpanel\\lcd\\lcd-font\\otf\\LCD14.otf")                                        #"C:\Users\admin\PycharmProjects\smart home\01-digitgraphics\01_DigiGraphics.mtt"
-Window.size = (1200,700)
+LabelBase.register("01_DigiGraphics",
+                   fn_regular="C:\\Users\\admin\\PycharmProjects\\dashpanel\\01-digitgraphics\\01_DigiGraphics.mtt")
+LabelBase.register("Hemi-Head",
+                   fn_regular="C:\\Users\\admin\\PycharmProjects\\dashpanel\\Hemi-Head\\Hemi Head\\hemi head bd it.ttf")
+LabelBase.register("lcd14",
+                   fn_regular="C:\\Users\\admin\\PycharmProjects\\dashpanel\\lcd\\lcd-font\\otf\\LCD14.otf")  # "C:\Users\admin\PycharmProjects\smart home\01-digitgraphics\01_DigiGraphics.mtt"
+Window.size = (1200, 700)
+
 
 class Main(MDFloatLayout):
     pass
+
+
 class Dash_Board(MDFloatLayout):
     rpm = 0
     speed = 0
     t = 0
     fuel = 0
-class Classic_style_dash_board(MDScreen, Thread):
+    widget_name = None
+
+
+class Classic_style_dash_board(MDScreen):
     latitude = NumericProperty()
     longitude = NumericProperty()
     lat = NumericProperty()
@@ -74,8 +82,8 @@ class Classic_style_dash_board(MDScreen, Thread):
     my_list = ListProperty()
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        #self.update_widget()
+        super(Classic_style_dash_board, self).__init__(**kwargs)
+        # self.update_widget()
 
         self.Longt = []
         self.Lat = []
@@ -91,15 +99,15 @@ class Classic_style_dash_board(MDScreen, Thread):
         self.val_pattern = Dash_Board()
         self.speed_lable = Speed_rpm_labels()
         self.stock_box = MDFloatLayout(pos_hint={"center_x": 0.5, "center_y": 0.50},
-            size_hint=(0.25, 0.25))
+                                       size_hint=(0.25, 0.25))
         img = Image(pos_hint={"center_x": 0.5, "center_y": 0.5},
-            source='stock.png')
+                    source='stock.png')
         self.stock_box.add_widget(img)
         self.add_widget(self.stock_box)
         self.scheduled = False
         self.scheduled_2 = False
 
-        Clock.schedule_interval(self.update_widget, 0.001)
+        Clock.schedule_interval(self.update_widget, 0.01)
 
     def update_widget(self, dt):
         if float(self.val_pattern.speed) > 10 and not self.scheduled and not self.scheduled_2:
@@ -120,8 +128,8 @@ class Classic_style_dash_board(MDScreen, Thread):
 
     def start(self, *args):
 
-        #self.read_data = self.data.readline()
-        #self.read_data = self.read_data.decode()
+        # self.read_data = self.data.readline()
+        # self.read_data = self.read_data.decode()
 
         digits = re.findall(r"-?\d+\.\d+|-?\d+", self.read_data)
         self.longitude = digits[0]
@@ -141,12 +149,14 @@ class Classic_style_dash_board(MDScreen, Thread):
 
         self.long = float(self.Lat[0])
         self.lati = float(self.Longt[0])
+
     # self.update_marker(self.lat, self.lon)
     # self.data.close()
     def update_marker(self, lat, lon):
         # Update the marker position with new GPS data
         self.marker.lat = lat
         self.marker.lon = lon
+
     # def update_position(self, lat, lon):
     #	self.mapview.center_on(self.lat, self.lon)
 
@@ -170,19 +180,19 @@ class Classic_style_dash_board(MDScreen, Thread):
         self.box1 = MDBoxLayout()
 
         self.Img1 = Image(source="screen3.png",
-            size_hint=(0.8, 0.8),
-            pos_hint={"center_x": 0.5, "center_y": 0.5},
-        )
+                          size_hint=(0.8, 0.8),
+                          pos_hint={"center_x": 0.5, "center_y": 0.5},
+                          )
 
         self.Img2 = Image(source="screen1.png",
-            size_hint=(0.8, 0.8),
-            pos_hint={"center_x": 0.5, "center_y": 0.5},
-        )
+                          size_hint=(0.8, 0.8),
+                          pos_hint={"center_x": 0.5, "center_y": 0.5},
+                          )
         self.Img3 = Image(source="screen2.png",
-            size_hint=(0.8, 0.8),
-            pos_hint={"center_x": 0.5, "center_y": 0.5},
+                          size_hint=(0.8, 0.8),
+                          pos_hint={"center_x": 0.5, "center_y": 0.5},
 
-        )
+                          )
         self.Img1.bind(on_touch_down=self.shift_to_1screen)
         self.Img2.bind(on_touch_down=self.shift_to_2screen)
         self.Img3.bind(on_touch_down=self.shift_to_3screen)
@@ -192,7 +202,6 @@ class Classic_style_dash_board(MDScreen, Thread):
         self.box1.add_widget(self.Img3)
 
         self.dialog = MDDialog(
-
 
             pos_hint={"center_x": 0.5, "center_y": 0.75},
             size_hint=(0.95, 0.3),
@@ -235,12 +244,19 @@ class Classic_style_dash_board(MDScreen, Thread):
 
         # return super(Dash_Board, self).on_touch_down(touch)
 
+
 class Scale(MDFloatLayout):
     pass
+
+
 class Ruler(MDFloatLayout):
     pass
+
+
 class Map(MDFloatLayout):
     pass
+
+
 class LBl(MDFloatLayout):
     def __init__(self, **kwargs):
         super(LBl, self).__init__(**kwargs)
@@ -257,17 +273,19 @@ class LBl(MDFloatLayout):
     # shift1 = Animation( pos=(46, 44),duration=1.0, t='in_out_elastic')
     # shift1.start(self.ids.lbl2)
     # print(self.canvas.children)
+
+
 class Digital_box(MDLabel):
     def __init__(self, **kwargs):
         super(Digital_box, self).__init__(**kwargs)
         self.lbl_speed = MDLabel(text="100", pos=(300, 10),
-        )
+                                 )
         self.lbl_kmh = MDLabel(text="KM/H", pos=(380, 0),
-        )
+                               )
         self.lbl_tacho = MDLabel(text="2500",  # pos=(600, 10),
-        )
+                                 )
         self.lbl_rpm = MDLabel(text="RPM", pos=(920, 0),
-        )
+                               )
         self.lbl_tacho.font_size = 60
         self.lbl_tacho.font_name = 'TickingTimebombBB'
         self.lbl_tacho.size = 200, 50
@@ -281,16 +299,18 @@ class Digital_box(MDLabel):
         self.add_widget(self.lbl_kmh)
         self.add_widget(self.lbl_tacho)
         self.add_widget(self.lbl_rpm)
-class Speedometr(MDFloatLayout, Thread):
+
+
+class Speedometr(MDFloatLayout):
     w = NumericProperty()
     kmh = "0"
     speed_lbl = StringProperty()
 
-    def __init__(self,  **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, **kwargs):
+        super(Speedometr, self).__init__(**kwargs)
         self.val_data = Dash_Board()
         self.speed = Speed_rpm_labels()
-        Clock.schedule_interval(self.update_value, 0.001)
+        Clock.schedule_interval(self.update_value, 0.01)
 
     def on_touch_down(self, touch):
         changes = Animation(size=(200, 200), pos=(46, 44), duration=1.0, t='in_out_elastic')
@@ -310,10 +330,13 @@ class Speedometr(MDFloatLayout, Thread):
             Ellipse(pos=(102, 102), size=(85, 85))
 
     def update_value(self, *args):
-        self.w = (Dash_Board.speed) * 260 / 200    #----------------> speedometer's arrow
-class Tachometr(MDFloatLayout, Thread):
+        self.w = float(Dash_Board.speed) * 260 / 200  # ----------------> speedometer's arrow
+
+
+class Tachometr(MDFloatLayout):
     rpm = NumericProperty(0)
     rpm_lbl = StringProperty()
+
     def on_touch_down(self, touch):
         changes1 = Animation(size=(200, 200), pos=(956, 44), duration=1.0, t='in_out_elastic')
         arrow1 = Animation(size=(513 / 5, 139 / 5), pos=(970, 130), duration=1.0, t='in_out_elastic')
@@ -327,29 +350,33 @@ class Tachometr(MDFloatLayout, Thread):
             Ellipse(pos=(1012, 102), size=(85, 85))
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        Clock.schedule_interval(self.update_value, 0.001)
+        super(Tachometr, self).__init__(**kwargs)
+        Clock.schedule_interval(self.update_value, 0.01)
 
         with self.canvas:
-            Color(43/255, 46/255, 47/255,1)
-            Ellipse(size=(220, 220), pos = (825,245))
+            Color(43 / 255, 46 / 255, 47 / 255, 1)
+            Ellipse(size=(220, 220), pos=(825, 245))
 
     def update_value(self, *args):
-        self.rpm = (Dash_Board.rpm) * 243 / 7000
-class Speed_rpm_labels(MDFloatLayout, Thread):
+        self.rpm = float(Dash_Board.rpm) * 243 / 7000
+
+
+class Speed_rpm_labels(MDFloatLayout):
     kmh = NumericProperty(0)
-    def __init__(self,  **kwargs):
-        super().__init__(**kwargs)
+
+    def __init__(self, **kwargs):
+        super(Speed_rpm_labels, self).__init__(**kwargs)
         self.val_data = Dash_Board()
-        #self.kmh = self.val_data.val
-        Clock.schedule_interval(self.update_label, 0.001)
-        
+        # self.kmh = self.val_data.val
+        Clock.schedule_interval(self.update_label, 0.01)
 
     def update_label(self, dt):
         self.ids.speed_lbl.text = str(self.val_data.speed)
-        self.ids.rpm_lbl.text = str(Dash_Board.rpm)
-        #print(self.kmh)
-class Sport_style_dash_board(MDScreen, Thread):
+        self.ids.rpm_lbl.text = str(round(float(Dash_Board.rpm)))
+        # print(self.kmh)
+
+
+class Sport_style_dash_board(MDScreen):
     x_rpm_scale = NumericProperty()
     rotate = NumericProperty()
     w = NumericProperty()
@@ -364,27 +391,27 @@ class Sport_style_dash_board(MDScreen, Thread):
         self.add_widget(Gauge_tank())
 
     def update_data(self, *args):
-        self.x_rpm_scale = (Dash_Board.rpm)*246/7000
-        self.ids.speed.text = str(Dash_Board.speed)
-        self.ids.rpm.text = str(Dash_Board.rpm)
+        self.x_rpm_scale = float(Dash_Board.rpm) * 246 / 7000
+        self.ids.speed.text = str(round(float(Dash_Board.speed)))
+        self.ids.rpm.text = str(round(float(Dash_Board.rpm)))
 
     def on_touch_down(self, touch):
-        #print(touch.pos)
+        # print(touch.pos)
         self.box1 = MDBoxLayout()
 
         self.Img1 = Image(source="screen3.png",
-            size_hint=(0.8, 0.8),
-            pos_hint={"center_x": 0.5, "center_y": 0.5},
-            )
+                          size_hint=(0.8, 0.8),
+                          pos_hint={"center_x": 0.5, "center_y": 0.5},
+                          )
 
         self.Img2 = Image(source="screen1.png",
-            size_hint=(0.8, 0.8),
-            pos_hint={"center_x": 0.5, "center_y": 0.5},
-        )
+                          size_hint=(0.8, 0.8),
+                          pos_hint={"center_x": 0.5, "center_y": 0.5},
+                          )
         self.Img3 = Image(source="screen2.png",
-            size_hint=(0.8, 0.8),
-            pos_hint={"center_x": 0.5, "center_y": 0.5},
-        )
+                          size_hint=(0.8, 0.8),
+                          pos_hint={"center_x": 0.5, "center_y": 0.5},
+                          )
 
         self.Img1.bind(on_touch_down=self.shift_to_1screen)
         self.Img2.bind(on_touch_down=self.shift_to_2screen)
@@ -393,7 +420,6 @@ class Sport_style_dash_board(MDScreen, Thread):
         self.box1.add_widget(self.Img1)
         self.box1.add_widget(self.Img2)
         self.box1.add_widget(self.Img3)
-
 
         self.dialog = MDDialog(
 
@@ -436,6 +462,8 @@ class Sport_style_dash_board(MDScreen, Thread):
                 self.manager.transition.direction = "left"
                 self.dialog.dismiss()
             return True
+
+
 class Gauge_temp(MDFloatLayout):
     x_coolant_temp = NumericProperty()
 
@@ -445,8 +473,10 @@ class Gauge_temp(MDFloatLayout):
 
     def coolant_temp(self, dt):
         n = np.random.randint(0, 100)
-        self.x_coolant_temp = int(Dash_Board.t)*180/110
-        self.ids.temp_label.text =  str(Dash_Board.t)
+        self.x_coolant_temp = int(Dash_Board.t) * 180 / 110
+        self.ids.temp_label.text = str(Dash_Board.t)
+
+
 class Gauge_tank(MDFloatLayout):
     x_tank = NumericProperty()
 
@@ -458,21 +488,23 @@ class Gauge_tank(MDFloatLayout):
         n = np.random.randint(0, 100)
         self.x_tank = n
 
+
 class Oil_gauge(MDFloatLayout):
     angle_oil_pressure = NumericProperty()
 
     def __init__(self, **kwargs):
         super(Oil_gauge, self).__init__(**kwargs)
         Clock.schedule_interval(self.arrow, 0.1)
+
     # def on_touch_down(self, touch):
     #    print(touch.pos)
     def arrow(self, dt):
-    #    data =
+        #    data =
         n = np.random.randint(0, 180)
         self.angle_oil_pressure = n
 
-class Turbo_presure_gauge(MDFloatLayout):
 
+class Turbo_presure_gauge(MDFloatLayout):
     angle_turbo_pressure = NumericProperty()
 
     def __init__(self, **kwargs):
@@ -485,36 +517,34 @@ class Turbo_presure_gauge(MDFloatLayout):
         n = np.random.randint(0, 270)
         self.angle_turbo_pressure = n
 
-class Engine(MDScreen, Thread):
-    graph = ObjectProperty()
-    get_data = ListProperty()
-    get_time = ListProperty()
-    theta = NumericProperty()
-    dt = NumericProperty()
-    time_count = NumericProperty(0)
-    temp_angle = NumericProperty()
-    oil_pressure_angle = NumericProperty()
-    volt_angle = NumericProperty()
-    oil_temp_angle = NumericProperty()
-    turbo_angle = NumericProperty()
 
-    def on_touch_down(self, touch):
+class Engine(MDScreen):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.add_widget(Temp())
+        self.add_widget(Gear_box_oil())
+        self.add_widget(Voltmetr())
+        self.add_widget(oil_pressure())
+        self.add_widget(turbo_pressure())
+
+    def on_touch_move(self, touch):
 
         self.box1 = MDBoxLayout()
 
         self.Img1 = Image(source="screen3.png",
-            size_hint=(0.8, 0.8),
-            pos_hint={"center_x": 0.5, "center_y": 0.5},
-            )
+                          size_hint=(0.8, 0.8),
+                          pos_hint={"center_x": 0.5, "center_y": 0.5},
+                          )
 
         self.Img2 = Image(source="screen1.png",
-            size_hint=(0.8, 0.8),
-            pos_hint={"center_x": 0.5, "center_y": 0.5},
-        )
+                          size_hint=(0.8, 0.8),
+                          pos_hint={"center_x": 0.5, "center_y": 0.5},
+                          )
         self.Img3 = Image(source="screen2.png",
-            size_hint=(0.8, 0.8),
-            pos_hint={"center_x": 0.5, "center_y": 0.5},
-        )
+                          size_hint=(0.8, 0.8),
+                          pos_hint={"center_x": 0.5, "center_y": 0.5},
+                          )
 
         self.Img1.bind(on_touch_down=self.shift_to_1screen)
         self.Img2.bind(on_touch_down=self.shift_to_2screen)
@@ -523,7 +553,6 @@ class Engine(MDScreen, Thread):
         self.box1.add_widget(self.Img1)
         self.box1.add_widget(self.Img2)
         self.box1.add_widget(self.Img3)
-
 
         self.dialog = MDDialog(
 
@@ -567,59 +596,9 @@ class Engine(MDScreen, Thread):
                 self.dialog.dismiss()
             return True
 
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        # self.on_touch_down(self)
-        self.get_data = []
-        self.get_time = []
-        # self.arduino_Data = serial.Serial("com3", 9600, timeout=1)
-        Clock.schedule_interval(self.read_data, 0.5)
-        #self.update()
-
-    #    self.box1 = MDFloatLayout(  # pos_hint={"x": 0.03, "y": 0.03},
-    #        size_hint=(0.46, 0.5))
-    #    self.box2 = MDFloatLayout(  # pos_hint= ({"x": 0.5, "y": 0.03})
-    #        size_hint=(0.46, 0.5))
-    #    # self.plotting()
-    #    # self.on_start()
-    #    self.graph1 = Graph(xlabel='t', ylabel='load', x_ticks_minor=1,
-    #        x_ticks_major=1, y_ticks_major=5,
-    #        y_grid_label=True, x_grid_label=True, padding=5,
-    #        x_grid=True, y_grid=True, xmin=-0, xmax=20, ymin=-2, ymax=2,
-    #        pos_hint={"x": 0.05, "y": 0.03}
-    #    )
-    #    self.plot = MeshLinePlot(color=[0, 1, 0, 1])
-    #
-    #    self.plot_x = self.get_time
-    #    self.plot_y = self.get_data
-    #
-    #    self.graph1.add_plot(self.plot)
-    #    self.box1.add_widget(self.graph1)
-    #
-    #    self.add_widget(self.box1)
-    #    self.graph2 = Graph(xlabel='t', ylabel='Air pressure', x_ticks_minor=1,
-    #        x_ticks_major=1, y_ticks_major=5, y_ticks_minor=1,
-    #        y_grid_label=True, x_grid_label=True, padding=5,
-    #        x_grid=True, y_grid=True, xmin=-0, xmax=5, ymin=-2, ymax=2,
-    #        pos_hint={"x": 1.05, "y": 0.03}
-    #    )
-    #    self.plot2 = LinePlot(color=[1, 0, 0, 1], line_width=2)
-    #
-    #    self.plot_x = self.get_time
-    #    self.plot_y = self.get_data
-    #
-    #    self.graph2.add_plot(self.plot2)
-    #    self.box2.add_widget(self.graph2)
-    #    self.add_widget(self.box2)
-
-    def read_data(self, dt):
-        self.temp(dt)
-        self.oil_pressure(dt)
-        self.turbo(dt)
-        self.volt(dt)
-        self.oil_temp(dt)
-        self.time_count += dt
+    def read_data(self, dt=0.1):
+        pass
+        # self.time_count += dt
         # self.time_count = round(self.time_count)
         # self.data = self.arduino_Data.readline()
         # self.data = str(self.data, 'utf-8')
@@ -630,28 +609,28 @@ class Engine(MDScreen, Thread):
 
         # self.time_count = round(self.time_count)
         # self.get_data.append(self.fuel_data)
-        self.get_time.append(self.time_count)
+        # self.get_time.append(self.time_count)
         # print(self.get_data)
-        #print(self.get_time)
+        # print(self.get_time)
 
-    #def update(self):
-    #    Clock.schedule_interval(self.read_data, 0.05)
-    #    Clock.schedule_interval(self.update_points, 0.05)
-    #    Clock.schedule_interval(self.update_xaxis, 0.05)
-    #
-    #def update_xaxis(self, *args):
-    #    self.graph1.xmin = self.get_time[0]
-    #    self.graph1.xmax = self.get_time[-1]
-    #    self.graph2.xmin = self.get_time[0]
-    #    self.graph2.xmax = self.get_time[-1]
-    #
-    #def update_points(self, *args):
-    #    # time.sleep(1)
-    #    # if len(self.get_data) == len(self.get_time):
-    #    self.plot.points = [(x / 100, sin(x / 10)) for x in range(1, 1000)]  # self.get_time]
-    #    self.plot2.points = [(x / 100, cos(x / 10)) for x in range(1, 1000)]
-    #    if len(self.get_time) > 10:
-    #        self.get_time.pop(0)
+    def update(self):
+        Clock.schedule_interval(self.read_data, 0.05)
+        Clock.schedule_interval(self.update_points, 0.05)
+        Clock.schedule_interval(self.update_xaxis, 0.05)
+
+    def update_xaxis(self, *args):
+        self.graph1.xmin = self.get_time[0]
+        self.graph1.xmax = self.get_time[-1]
+        self.graph2.xmin = self.get_time[0]
+        self.graph2.xmax = self.get_time[-1]
+
+    def update_points(self, *args):
+        # time.sleep(1)
+        # if len(self.get_data) == len(self.get_time):
+        self.plot.points = [(x / 100, sin(x / 10)) for x in range(1, 1000)]  # self.get_time]
+        self.plot2.points = [(x / 100, cos(x / 10)) for x in range(1, 1000)]
+        if len(self.get_time) > 10:
+            self.get_time.pop(0)
             # self.get_data.pop(0)
 
     # def plotting(self):
@@ -666,49 +645,297 @@ class Engine(MDScreen, Thread):
     #
     #    self.graph.add_plot(self.plot)
     #    self.ids.engine_fuel_cons.add_widget(self.graph)
-    def temp(self, dt):
-        n = np.random.randint(0, 100)
-        t = 90
-        if t < 60:
-            self.temp_angle = 0
-        else:
-            self.temp_angle = n*180/70
-
-    def oil_pressure(self, dt):
-        n = np.random.randint(50, 100)
-        self.oil_pressure_angle = n*180/6
-
-    def volt(self, dt):
-        n = np.random.randint(0, 100)
-        self.volt_angle = n*180/2
-    def oil_temp(self, dt):
-        n = np.random.randint(0, 100)
-        self.oil_temp_angle = n*180/100
-    def turbo(self, dt):
-        n = np.random.randint(0, 100)
-        self.turbo_angle = n*180/3
 
 
-class Dashboard_project(MDApp, Thread):
-    #Dash_Board.val = 0
+class Temp(MDFloatLayout, TouchBehavior):
+    dialog = None
+    name = "Temperature"
+
+    def __init__(self, **kwargs):
+        super(Temp, self).__init__(**kwargs)
+
+    def on_touch_down(self, touch):
+        if self.collide_point(touch.x, touch.y) == True:
+            Dash_Board.widget_name = "Temperature t °C"
+            print("temp event")
+            if self.dialog:
+                self.dialog.dismiss()
+
+            self.dialog = MDDialog(
+                type='custom',
+                content_cls=Plot_box(),
+                pos_hint={"center_x": 0.5, "center_y": 0.5},
+                size_hint=(0.6, 0.5),
+                # radius=[2, 2, 2, 2],
+                md_bg_color=(0, 0, 0, 0),
+                # text = "dialog",
+
+                elevation=3,
+                shadow_softness=5,
+
+                buttons=[
+                    Button(
+                        text="Close"
+                    )]
+            )
+            self.dialog.bind(on_dismiss=self.on_dialog_dismiss)
+            self.dialog.open()
+
+    def on_dialog_dismiss(self, *args):
+
+        # if self.dialog:
+        plot_box = self.dialog.content_cls
+        plot_box.stop_process()
+
+
+class Gear_box_oil(MDFloatLayout, TouchBehavior):
+    dialog = None
+
+    def on_touch_down(self, touch):
+
+        if self.collide_point(touch.x, touch.y) == True:
+            print("gear box event")
+            Dash_Board.widget_name = "Gearbox oil t °C"
+            if self.dialog:
+                self.dialog.dismiss()
+
+            self.dialog = MDDialog(
+                type='custom',
+                content_cls=Plot_box(),
+                pos_hint={"center_x": 0.5, "center_y": 0.5},
+                size_hint=(0.6, 0.5),
+                # radius=[2, 2, 2, 2],
+                md_bg_color=(0, 0, 0, 0),
+                # text = "dialog",
+
+                elevation=3,
+                shadow_softness=5,
+
+                buttons=[
+                    Button(
+                        text="Close"
+                    )]
+            )
+            self.dialog.bind(on_dismiss=self.on_dialog_dismiss)
+            self.dialog.open()
+
+    def on_dialog_dismiss(self, *args):
+
+        # if self.dialog:
+        plot_box = self.dialog.content_cls
+        plot_box.stop_process()
+
+
+class Voltmetr(MDFloatLayout, TouchBehavior):
+    dialog = None
+
+    def on_touch_down(self, touch):
+
+        if self.collide_point(touch.x, touch.y) == True:
+            print("gear box event")
+            Dash_Board.widget_name = "Alternator output, V"
+            if self.dialog:
+                self.dialog.dismiss()
+
+            self.dialog = MDDialog(
+                type='custom',
+                content_cls=Plot_box(),
+                pos_hint={"center_x": 0.5, "center_y": 0.5},
+                size_hint=(0.6, 0.5),
+                # radius=[2, 2, 2, 2],
+                md_bg_color=(0, 0, 0, 0),
+                # text = "dialog",
+
+                elevation=3,
+                shadow_softness=5,
+
+                buttons=[
+                    Button(
+                        text="Close"
+                    )]
+            )
+            self.dialog.bind(on_dismiss=self.on_dialog_dismiss)
+            self.dialog.open()
+
+    def on_dialog_dismiss(self, *args):
+
+        # if self.dialog:
+        plot_box = self.dialog.content_cls
+        plot_box.stop_process()
+
+
+class oil_pressure(MDFloatLayout, TouchBehavior):
+    dialog = None
+
+    def on_touch_down(self, touch):
+
+        if self.collide_point(touch.x, touch.y) == True:
+            print("gear box event")
+            Dash_Board.widget_name = "Oil pressure, PSI"
+            if self.dialog:
+                self.dialog.dismiss()
+
+            self.dialog = MDDialog(
+                type='custom',
+                content_cls=Plot_box(),
+                pos_hint={"center_x": 0.5, "center_y": 0.5},
+                size_hint=(0.6, 0.5),
+                # radius=[2, 2, 2, 2],
+                md_bg_color=(0, 0, 0, 0),
+                # text = "dialog",
+
+                elevation=3,
+                shadow_softness=5,
+
+                buttons=[
+                    Button(
+                        text="Close"
+                    )]
+            )
+            self.dialog.bind(on_dismiss=self.on_dialog_dismiss)
+            self.dialog.open()
+
+    def on_dialog_dismiss(self, *args):
+
+        # if self.dialog:
+        plot_box = self.dialog.content_cls
+        plot_box.stop_process()
+
+
+class turbo_pressure(MDFloatLayout, TouchBehavior):
+    dialog = None
+
+    def on_touch_down(self, touch):
+
+        if self.collide_point(touch.x, touch.y) == True:
+            print("gear box event")
+            Dash_Board.widget_name = "Turbo boost, PSI"
+            if self.dialog:
+                self.dialog.dismiss()
+
+            self.dialog = MDDialog(
+                type='custom',
+                content_cls=Plot_box(),
+                pos_hint={"center_x": 0.5, "center_y": 0.5},
+                size_hint=(0.6, 0.5),
+                # radius=[2, 2, 2, 2],
+                md_bg_color=(0, 0, 0, 0),
+                # text = "dialog",
+
+                elevation=3,
+                shadow_softness=5,
+
+                buttons=[
+                    Button(
+                        text="Close"
+                    )]
+            )
+            self.dialog.bind(on_dismiss=self.on_dialog_dismiss)
+            self.dialog.open()
+
+    def on_dialog_dismiss(self, *args):
+
+        # if self.dialog:
+        plot_box = self.dialog.content_cls
+        plot_box.stop_process()
+
+
+class Plot_box(MDFloatLayout):
+    y = NumericProperty(0)
+    x = NumericProperty(0)
+
+    def __init__(self, **kwargs):
+        super(Plot_box, self).__init__(**kwargs)
+        self.engine_cls = Engine()
+        self.pos = 225, 100
+        self.size_hint = None, None
+        self.size = 750, 500
+        self.x = 0
+        self.y = 0
+        self.x_axes = []
+        self.y_axes = []
+
+        self.Clock_id = Clock.schedule_interval(self.get_data, 0.001)
+        self.Clock_id()
+
+        self.graf = plt.gcf()
+        self.graph = None
+
+    def get_data(self, dt):
+
+        self.x += 1
+        if self.x == 180:
+            self.x = 180
+            self.x -= 1
+            if self.x == 0:
+                self.x = 0
+                self.x += 1
+
+        self.y = round(sin(self.x), 1)
+
+        self.x_axes.append(self.x)
+        self.y_axes.append(self.y)
+
+        if len(self.x_axes) > 50:
+            self.x_axes.pop(0)
+            self.y_axes.pop(0)
+
+        print(self.x_axes)
+        print(self.y_axes)
+
+        plt.clf()
+
+        plt.title(Dash_Board.widget_name)
+        plt.legend(["ϰ/t"], loc="upper right")
+        plt.plot(self.x_axes, self.y_axes,
+                 color='red',
+                 linestyle='-',
+                 linewidth=3,
+                 animated=False,
+                 markerfacecolor='blue',
+                 markersize=12)
+
+        plt.xlabel('t, sec')
+        plt.ylabel('ϰ, 1/R')
+        plt.grid(False)
+        plt.ylim(0, 1)
+        plt.style.context('dark_background')
+        self.graf.canvas.draw()
+        obj = FigureCanvasKivyAgg(self.graf)
+        obj.pos = 225, 100
+        self.add_widget(obj)
+
+    def stop_process(self):
+        Clock.unschedule(self.Clock_id)
+
+        self.x_axes.clear()
+        self.y_axes.clear()
+        print("stop, lists are: ")
+        print(self.x_axes)
+        print(self.y_axes)
+
+
+class Dashboard_project(MDApp):
+    # Dash_Board.val = 0
     cnt = True
-    def __int__(self, **kwargs):
-        super().__init__(**kwargs)
+
     def build(self):
-        #obd.logger.setLevel(obd.logging.DEBUG)
-        #self.connection = obd.OBD(portstr="COM3", fast=False, timeout=30)  #connection via bluetooth
+        # obd.logger.setLevel(obd.logging.DEBUG)
+        # self.connection = obd.OBD(portstr="COM3", fast=False, timeout=30)
+        # self.connection = obd.OBD(portstr="COM9")
+        # self.Arduino_Data = serial.Serial("com2", 115200)
         self.connection = obd.OBD(portstr="COM9")
         self.FLOATING_POINT_PATTERN = r"-?\d+\.\d+|-?\d+"
-        #self.Arduino_Data = serial.Serial("com2", 115200)
+        # self.Arduino_Data = serial.Serial("com2", 115200)
         Clock.schedule_interval(self.data, 0.001)
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Red"
 
         sm = ScreenManager()
 
-        sm.add_widget(Classic_style_dash_board(name = "dash1"))
-        sm.add_widget(Sport_style_dash_board(name = "dash2"))
-        sm.add_widget(Engine(name = "dash3"))
+        sm.add_widget(Classic_style_dash_board(name="dash1"))
+        sm.add_widget(Sport_style_dash_board(name="dash2"))
+        sm.add_widget(Engine(name="dash3"))
 
         return sm
 
@@ -727,7 +954,7 @@ class Dashboard_project(MDApp, Thread):
         ## Join values with units
         try:
             Dash_Board.rpm = int(float(', '.join(rpm_values)))
-            Dash_Board.rpm = round(Dash_Board.rpm/50)*50
+            Dash_Board.rpm = round(Dash_Board.rpm / 50) * 50
             Dash_Board.speed = int(float(', '.join(speed_values)))
             Dash_Board.t = ', '.join(coolant_temp_values)
 
@@ -740,19 +967,6 @@ class Dashboard_project(MDApp, Thread):
             print(Dash_Board.t)
         except Exception as e:
             print("Error:", e)
-        #rpm = str(self.connection.query(obd.commands.RPM))
-        #Dash_Board.rpm = re.search(r"-?\d+\.\d+|-?\d+", rpm)
-        ##Dash_Board.rpm = ', '.join(Dash_Board.rpm)
-        ##Dash_Board.rpm = float(int(str(Dash_Board.rpm)))
-        #print(Dash_Board.rpm)
-        #speed = str(self.connection.query(obd.commands.SPEED))
-        #Dash_Board.speed = re.search(r"-?\d+\.\d+|-?\d+", speed)
-        ##Dash_Board.speed = (', '.join(Dash_Board.speed))
-        #print(Dash_Board.speed)
-        #t = str(self.connection.query(obd.commands.COOLANT_TEMP))
-        #Dash_Board.t = re.search(r"-?\d+\.\d+|-?\d+", t)
-        ##Dash_Board.t = ', '.join(Dash_Board.t)
-        #print(Dash_Board.t)
 
     #    if self.cnt:
     #        Dash_Board.val += 1
@@ -764,23 +978,18 @@ class Dashboard_project(MDApp, Thread):
     #            self.cnt =True
     #    print(Dash_Board.val)
 
-        #threading.Thread(target=self._arduino_thread, daemon=True).start()
+    # threading.Thread(target=self._arduino_thread, daemon=True).start()
 
-    #def _arduino_thread(self):
+    # def _arduino_thread(self):
 
-
-
-        #self.read_data = self.Arduino_Data.readline()
-        #self.read_data = self.read_data.decode("cp1252")
-        #self.digits = re.findall(r"-?\d+\.\d+|-?\d+", self.read_data)
-        #if self.digits:
-        #    Dash_Board.val = self.digits[0]
-        #    print(Dash_Board.val)
-    #def test_data(self):
-
+    # self.read_data = self.Arduino_Data.readline()
+    # self.read_data = self.read_data.decode("cp1252")
+    # self.digits = re.findall(r"-?\d+\.\d+|-?\d+", self.read_data)
+    # if self.digits:
+    #    Dash_Board.val = self.digits[0]
+    #    print(Dash_Board.val)
+    # def test_data(self):
 
 
 if __name__ == '__main__':
-
-
     Dashboard_project().run()

@@ -19,12 +19,9 @@ Main:
 		Digital_box:
 
 	Sport_style_dash_board:
-		Gauge_temp:
-		Gauge_tank:
-		Oil_gauge:
-		Turbo_presure_gauge:
 
 	Engine:
+
 
 #---------------------------------------------------------------------------
 
@@ -41,15 +38,9 @@ Main:
             source: "vecteezy_mpty-racing-track-with-illuminated-lights-in-night-empty_22695456.jpg"
 
 <Sport_style_dash_board>:
-    
+
 
     canvas.before:
-        Color:
-            rgba: 1, 1, 1, 0.5  # red
-        Rectangle:
-            size: self.size
-            pos: self.pos
-            source: "speed.png"
         Color:
             rgba: 0, 0, 0, 1  # red
         Ellipse:
@@ -125,11 +116,10 @@ Main:
         font_name: "Hemi-Head"
         font_size: 24
         markup: True
-    #FitImage:
-    #    pos: self.pos
-    #    size: self.size
-    #    #size_hint_y: 0.20
-    #    source: "road_city.png"
+    FitImage:
+        pos: 0, 0
+        size_hint_y: 0.20
+        source: "road_to_horizont.png"
 
 <Gauge_temp>:
 	canvas.before:
@@ -281,42 +271,10 @@ Main:
 
 <Dash_Board>:
 
-
+#-------------------------------------------------------------------------------------------
 <Engine>:
+
 	name: "dash3"
-
-    #--------------------------------------------------------------------------------------------------
-
-        #MDFloatLayout:
-        #    id: engine_fuel_cons
-        #    pos_hint: {"x": 0.03, "y": 0.03}
-        #    size_hint: 0.46, 0.5
-        #    MDBoxLayout:
-        #
-        #        pos_hint: {"x": 0.03, "y": 0.03}
-        #        #size_hint: 0.46, 0.5
-        #
-        #        canvas:
-        #            Color:
-        #                rgba: 0.25, 0.25, 1, 0.5
-        #            Rectangle:
-        #                size: self.size
-        #                pos: self.pos
-        #
-        #MDFloatLayout:
-        #    id: turbo_graph
-        #    pos_hint: {"x": 0.5, "y": 0.03}
-        #    size_hint: 0.46, 0.5
-        #    MDBoxLayout:
-        #
-        #        pos_hint: {"x": 0.03, "y": 0.03}
-        #        #size_hint: 0.46, 0.5
-        #        canvas:
-        #            Color:
-        #                rgba: 1, 0, 0.25, 0.5
-        #            Rectangle:
-        #                size: self.size
-        #                pos: self.pos
 
     canvas.before:
         Color:
@@ -326,52 +284,49 @@ Main:
             pos: self.pos
             source: "frame_engine_control.png"
 
-    MDBoxLayout:
-        size_hint: 1, 0.1
-        pos_hint: {"top": 1}
-        MDLabel:
-            pos_hint: {"center_x": 0.5, "center_y": 0.25}
-            text: " Engine control "
-            halign: "center"
-            font_name: 'TickingTimebombBB'
-            theme_text_color: "Custom"
-            text_color: "white"
-            font_size: 32
 
+    MDLabel:
+        pos_hint: {"center_x": 0.5, "center_y": 0.9}
+        text: " Engine control "
+        halign: "center"
+        font_name: 'TickingTimebombBB'
+        theme_text_color: "Custom"
+        text_color: "white"
+        font_size: 32
 
+    MDFloatLayout:
+        #canvas:
+        #    Color:
+        #        rgba: 0, 0, 0.75, 0.5
+        #    Rectangle:
+        #        size: self.size
+        #        pos: self.pos
+        id: graph_box
+        pos_hint: {"center_x": 0.5, "center_y": 0.3}
+        size_hint: 0.65, 0.50
 
+<Temp>:
 
-    #MDBoxLayout:
-    #    size_hint: 1, 0.1
-    #    pos_hint: {"x": 0, "y": 0.51}
-    #    canvas.before:
-    #        Color:
-    #            rgba: 0.35, 0.45, 0.78, 0.5
-    #        Rectangle:
-    #            size: self.size
-    #            pos: self.pos
-    #
-    #MDFloatLayout:
-    #    MDLabel:
-    #        pos_hint: {"center_x": 0.5, "center_y": 0.95}
-    #        text: " engine indicators and efficiency "
-    #        halign: "center"
-    #        font_name: 'TickingTimebombBB'
-    #        theme_text_color: "Custom"
-    #        text_color: "white"
-    #        font_size: 32
-    #
-    #    MDFloatLayout:
-    #        pos_hint: {"center_x": 0.1, "center_y": 0.75}
-    #        #size_hint: 0.5, 0.5
+    canvas.before:
+        Color:
+            rgba: 1, 0, 0, 0.5
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    pos_hint: {"center_x": 0.1, "center_y": 0.7}
+    size_hint: None, None
+    size: 200, 200
 
     Image:
         id: gif_img
-        pos_hint: {"center_x": 0.1, "center_y": 0.7}
-        size_hint: 0.3, 0.3
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        #size_hint: 0.3, 0.3
+
+        #size: 200, 200
         source: "temp_gauge2.png"
     MDLabel:
-        pos_hint: {"center_x": 0.1, "center_y": 0.87}
+        id: temp_label
+        pos_hint: {"center_x": 0.5, "center_y": 0.25}
         text: " coolant temp "
         halign: "center"
         font_name: 'TickingTimebombBB'
@@ -379,9 +334,9 @@ Main:
         text_color: "white"
         font_size: 18
     Image:
-        pos_hint: {"center_x": 0.08, "center_y": 0.705}
-        size_hint: 0.06, 0.06
-        #size: 150, 50
+        pos_hint: {"center_x": 0.35, "center_y": 0.52}
+        size_hint: None, None
+        size: 90, 30
         source: "arrow2.png"
         canvas.before:
             #InstructionGroup:
@@ -390,20 +345,30 @@ Main:
             Rotate:
                 #group: 'rotate'
 
-                angle: root.temp_angle
+                angle: 0
                 origin: 118, 527
                 axis: 0,0,1
         canvas.after:
             PopMatrix:
 #---------------------------------------------------------------------------------------
-
+<Gear_box_oil>:
+    canvas.before:
+        Color:
+            rgba: 0, 1, 0, 0.5
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    pos_hint: {"center_x": 0.3, "center_y": 0.7}
+    size_hint: None, None
+    size: 200, 200
 
     Image:
-        pos_hint: {"center_x": 0.3, "center_y": 0.7}
-        size_hint: 0.3, 0.3
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        #size_hint: 0.3, 0.3
         source: "gear_box_oil_temp_gauge2.png"
     MDLabel:
-        pos_hint: {"center_x": 0.3, "center_y": 0.87}
+        id: gearbox_oil_label
+        pos_hint: {"center_x": 0.5, "center_y": 0.25}
         text: " gearbox oil temp "
         halign: "center"
         font_name: 'TickingTimebombBB'
@@ -412,9 +377,9 @@ Main:
         font_size: 18
 
     Image:
-        pos_hint: {"center_x": 0.28, "center_y": 0.705}
-        size_hint: 0.06, 0.06
-        #size: 150, 50
+        pos_hint: {"center_x": 0.35, "center_y": 0.52}
+        size_hint: None, None
+        size: 90, 30
         source: "arrow2.png"
         canvas.before:
             #InstructionGroup:
@@ -423,18 +388,31 @@ Main:
             Rotate:
                 #group: 'rotate'
 
-                angle: root.oil_temp_angle
+                angle: 0
                 origin: 118, 527
                 axis: 0,0,1
         canvas.after:
             PopMatrix:
-#---------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------
+
+<Voltmetr>:
+    canvas.before:
+        Color:
+            rgba: 0, 0, 1, 0.5
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    pos_hint: {"center_x": 0.5, "center_y": 0.7}
+    size_hint: None, None
+    size: 200, 200
+
     Image:
-        pos_hint: {"center_x": 0.5, "center_y": 0.697}
-        size_hint: 0.33, 0.33
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        size_hint: 1.1, 1.1
         source: "voltmetr.png"
     MDLabel:
-        pos_hint: {"center_x": 0.5, "center_y": 0.87}
+        id: volt_label
+        pos_hint: {"center_x": 0.5, "center_y": 0.25}
         text: " Volt "
         halign: "center"
         font_name: 'TickingTimebombBB'
@@ -442,9 +420,9 @@ Main:
         text_color: "white"
         font_size: 18
     Image:
-        pos_hint: {"center_x": 0.48, "center_y": 0.705}
-        size_hint: 0.06, 0.06
-        #size: 150, 50
+        pos_hint: {"center_x": 0.35, "center_y": 0.52}
+        size_hint: None, None
+        size: 90, 30
         source: "arrow2.png"
         canvas.before:
             #InstructionGroup:
@@ -453,28 +431,40 @@ Main:
             Rotate:
                 #group: 'rotate'
 
-                angle: root.volt_angle
+                angle: 0
                 origin: 118, 527
                 axis: 0,0,1
         canvas.after:
             PopMatrix:
 #-----------------------------------------------------------------------------------------------
+<oil_pressure>:
+    canvas.before:
+        Color:
+            rgba: 0.5, 0.5, 0.5, 0.5
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    pos_hint: {"center_x": 0.7, "center_y": 0.7}
+    size_hint: None, None
+    size: 200, 200
+
     Image:
-        pos_hint: {"center_x": 0.7, "center_y": 0.697}
-        size_hint: 0.33, 0.33
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        size_hint: 1.1, 1.1
         source: "oil_pressure.png"
     MDLabel:
-        pos_hint: {"center_x": 0.7, "center_y": 0.87}
-        text: " engine oil pressure "
+        id: oil_label
+        pos_hint: {"center_x": 0.5, "center_y": 0.20}
+        text: " oil pressure "
         halign: "center"
         font_name: 'TickingTimebombBB'
         theme_text_color: "Custom"
         text_color: "white"
         font_size: 18
     Image:
-        pos_hint: {"center_x": 0.68, "center_y": 0.705}
-        size_hint: 0.06, 0.06
-        #size: 150, 50
+        pos_hint: {"center_x": 0.35, "center_y": 0.52}
+        size_hint: None, None
+        size: 90, 30
         source: "arrow2.png"
         canvas.before:
             #InstructionGroup:
@@ -483,18 +473,30 @@ Main:
             Rotate:
                 #group: 'rotate'
 
-                angle: root.oil_pressure_angle
+                angle: 0
                 origin: 118, 527
                 axis: 0,0,1
         canvas.after:
             PopMatrix:
-    #---------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------
+<turbo_pressure>:
+    canvas.before:
+        Color:
+            rgba: 0.25, 0.25, 0, 0.5
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    pos_hint: {"center_x": 0.9, "center_y": 0.7}
+    size_hint: None, None
+    size: 200, 200
+
     Image:
-        pos_hint: {"center_x": 0.9, "center_y": 0.700}
-        size_hint: 0.33, 0.33
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        size_hint: 1.1, 1.1
         source: "turbo_pressure.png"
     MDLabel:
-        pos_hint: {"center_x": 0.9, "center_y": 0.87}
+        id: turbo_label
+        pos_hint: {"center_x": 0.5, "center_y": 0.25}
         text: " turbo pressure "
         halign: "center"
         font_name: 'TickingTimebombBB'
@@ -502,9 +504,9 @@ Main:
         text_color: "white"
         font_size: 18
     Image:
-        pos_hint: {"center_x": 0.88, "center_y": 0.705}
-        size_hint: 0.06, 0.06
-        #size: 150, 50
+        pos_hint: {"center_x": 0.35, "center_y": 0.52}
+        size_hint: None, None
+        size: 90, 30
         source: "arrow2.png"
         canvas.before:
             #InstructionGroup:
@@ -513,53 +515,14 @@ Main:
             Rotate:
                 #group: 'rotate'
 
-                angle: root.turbo_angle
+                angle: 0
                 origin: 118, 527
                 axis: 0,0,1
         canvas.after:
             PopMatrix:
+#---------------------------------------------------------------------------------
 
-
-        #MDLabel:
-        #    pos_hint: {"center_x": 0.5, "center_y": 0.9}
-        #    text: " engine loading "
-        #    halign: "left"
-        #    font_name: 'TickingTimebombBB'
-        #    theme_text_color: "Custom"
-        #    text_color: "white"
-        #    font_size: 18
-        #MDLabel:
-        #    pos_hint: {"center_x": 0.5, "center_y": 0.85}
-        #    text: " engine range "
-        #    halign: "left"
-        #    font_name: 'TickingTimebombBB'
-        #    theme_text_color: "Custom"
-        #    text_color: "white"
-        #    font_size: 18
-        #MDLabel:
-        #    pos_hint: {"center_x": 0.5, "center_y": 0.8}
-        #    text: " actual oil pressure "
-        #    halign: "left"
-        #    font_name: 'TickingTimebombBB'
-        #    theme_text_color: "Custom"
-        #    text_color: "white"
-        #    font_size: 18
-        #MDLabel:
-        #    pos_hint: {"center_x": 0.5, "center_y": 0.75}
-        #    text: " fuel usage pr one pistone usage "
-        #    halign: "left"
-        #    font_name: 'TickingTimebombBB'
-        #    theme_text_color: "Custom"
-        #    text_color: "white"
-        #    font_size: 18
-        #MDLabel:
-        #    pos_hint: {"center_x": 0.5, "center_y": 0.7}
-        #    text: " t of intake air "
-        #    halign: "left"
-        #    font_name: 'TickingTimebombBB'
-        #    theme_text_color: "Custom"
-        #    text_color: "white"
-        #    font_size: 18
+<Plot_box>:
 
 <Slides>:
 	#name: "slide"

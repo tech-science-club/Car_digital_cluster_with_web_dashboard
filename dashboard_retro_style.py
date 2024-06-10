@@ -41,7 +41,7 @@ from kivymd.uix.toolbar import MDTopAppBar, MDBottomAppBar
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition, SwapTransition
 import math
-LabelBase.register("LCD14", fn_regular="C:/Users/admin/PycharmProjects/dashpanel/lcd/lcd-font/otf/LCD14.otf")
+LabelBase.register("LCD14", fn_regular="C:/Users/User/PycharmProjects/Car_Dashboard_with_web_access_clone/lcd/LCD14.otf")
 
 Window.size = (1200,800)
 

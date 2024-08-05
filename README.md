@@ -53,15 +53,14 @@ As long as I study Python and its GUI Kivy, I have used it to design main App an
 In the end I have got the App with 3 screens, which we can shift calling popup dialog window
 1. Clasic view:
 
-![](2024-08-05 195204.png)
+![](1screen.png)
 
 2. With a little bit sport features:
 
-![](2024-08-05 195235.png)
+![](2screen.png)
 
 3. Service window with relevant sensors' data:
 
-![](2024-08-05 195259.png)
-
+![](3screen.png)
 
 

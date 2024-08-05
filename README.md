@@ -46,15 +46,22 @@ I can recommend to start from here: https://www.carhackingvillage.com/getting-st
 
 And highly recommend this book
 ![](CANhaking.png)
+
 A lot of information about how do automotive network is designed and works.
 
 As long as I study Python and its GUI Kivy, I have used it to design main App and deploy it on Raspberry platform. 
 In the end I have got the App with 3 screens, which we can shift calling popup dialog window
-1. Clasic view
+1. Clasic view:
+
 ![](2024-08-05 195204.png)
-2. With a little bit sport features
+
+2. With a little bit sport features:
+
 ![](2024-08-05 195235.png)
-3. Service window with relevant sensors' data
+
+3. Service window with relevant sensors' data:
+
 ![](2024-08-05 195259.png)
+
 
 

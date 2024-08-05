@@ -1,26 +1,24 @@
-Car Dashboard with relevant information from CAN bus.
+Car Digital Cluster, Web dashboard with relevant information from CAN bus.
 
-Depiction of the vehicle CAN information on the gadget's screen in the form of Digital Cluster as it is so popular nowadays 
-on modern cars.
+The depiction of vehicle CAN information on a gadget's screen in the form of a Digital Cluster is very popular in modern cars.
+To innovate in this area, we decided to design and embed a system into the car that can read the CAN bus, 
+display the information on its screen, and transmit the data to the web. This system will display the information on a web 
+page and store the corresponding data in a database.
+This could be particularly useful for tracking your car usage and maintaining its statistical data.
 
-To go further and to bring something new in this area was decided to design and embed into the car system which can 
-read CAN bus, depict it on its screen and pass data to the web and depict that information on web page having correspondent 
-data in the database.
-It might be relevant if you want to keep a track on your car usage and have its statistic data 
-
-The working platform to embed idea into the life was chosen Raspberry pi 4 with correspondent
-features and possibilities to have a screen with high resolution.
+The working platform chosen to bring this idea to life was the Raspberry Pi 4, 
+with its corresponding features and capabilities, including support for a high-resolution screen.
 
 link: https://www.raspberrypi.com/products/raspberry-pi-4-model-b/
 
 ![](rpi4.png)
 
-To communicate with CAN bus on the vehicle was chosen CANable adapter. Easy to use, cheap and can interact with CANViewer
-and Python-can library
+To communicate with the CAN bus on the vehicle, the CANable adapter was chosen. It is easy to use, affordable 
+and compatible with CANViewer and the Python-can library
 
 ![](CANable.png)
 
-To send data via GSM I have been using A9GTkinter module
+To send data via GSM I have been using A9GTkinter module:
 link: https://docs.ai-thinker.com/gprs 
 
 ![](1.webp)
@@ -29,17 +27,22 @@ To read GPS data I have chosen well known and good recommended Neo6m GPS tracker
 
 ![](neo6m.webp)
 
-In the case to debug our CAN module and check it's work ability I have made a debug module from Arduino Mega and MCP2515.
-It can generate random CAN messages and send it to the our CANable module
+To debug our CAN module and verify its functionality, I created a debug module using an Arduino Mega and MCP2515. 
+This setup can generate random CAN messages and send them to our CANable module.
 ![](ATMega2560+MCP2515.jpg)
 
-As we have could connect and read a data, we could go further and connect to the car, read CAN bus with the CANable and 
-CAN-viewer software
+As we were able to connect and read data, we could proceed to connect to the car, read the CAN bus using the 
+CANable adapter, and use the CANViewer software.
 
-As we well know (or maybe some new people not yet) information among vehicle modules is exchanging via CAN bus messages.
-Similarly to our network, but instead of PC as users, there are some amount of microcontrollers and modules. But to catch 
-messages, its only 1st and small step. We have to encrypt it and decode in understandable for human eye view with reverse 
-engineering approach as long as this information, which CAN bus messages belong to modules, is a sicret. 
+https://www.youtube.com/watch?v=znYXwvMBHLY
+
+As we know (or for those new to the field), information among vehicle modules is exchanged via CAN bus messages. 
+Similar to our computer networks, but instead of PCs as users, there are numerous microcontrollers and modules. 
+However, capturing these messages is only the first small step. We need to encrypt and decode them into a format 
+understandable to the human eye using reverse engineering techniques, as the information contained in CAN bus messages 
+is proprietary
+Here is detailed information:
+https://www.csselectronics.com/pages/can-bus-simple-intro-tutorial
 
 You have to read a half of relevant internet sources and books. 
 I can recommend to start from here: https://www.carhackingvillage.com/getting-started.
@@ -50,8 +53,9 @@ And highly recommend this book:
 
 A lot of information about how do automotive network is designed and works.
 
-As long as I study Python and its GUI Kivy, I have used it to design main App and deploy it on Raspberry platform. 
-In the end I have got the App with 3 screens, which we can shift calling popup dialog window
+As I was studying Python and its GUI framework Kivy, I used it to design the main app and deploy it on the Raspberry Pi platform. 
+In the end, I developed an app with three screens, which can be navigated by calling popup dialog windows.
+
 1. Clasic view:
 
 ![](1screen.png)
@@ -64,19 +68,18 @@ In the end I have got the App with 3 screens, which we can shift calling popup d
 
 ![](3screen.png)
 
-Basically it works pretty well. 
-Before CAN bus I had tried to read off data via OBDII interface with Python OBD library. It works, but my possibilities 
-were limited with accessible PIDs. Only 7 data types 
-with CAN bus we can get much more, the most difficult part is to encrypt messages and extract desirable information from 
-there.
+Basically, it works quite well. Before using the CAN bus, I tried to read data via the OBD-II interface with the Python 
+OBD library. While it worked, my options were limited to the accessible PIDs, which only provided 7 types of data. 
+With the CAN bus, we can access much more. The most challenging part is encrypting the messages and extracting 
+the desired information from them.
 
-The retrieved CAN bus data App processes and send data to web server.
-PHP scripts manages data inserting it from GSM module into database, extracts from DB and builds correspondant plots
-with JS scripts.
+The retrieved CAN bus data is processed by the app and sent to a web server. PHP scripts manage the data by inserting it 
+from the GSM module into a database, extracting it from the database, and building corresponding plots using JavaScript.
 
 http://vehicledata.atwebpages.com/index.html
 
-Finally, we can observe our vehicle information on the plots, especially it's consumption and emition of CO2, GPS tracking
+Finally, we can observe our vehicle's information through the plots, including details such as fuel consumption, 
+CO2 emissions, and GPS tracking.
 
 
 
@@ -84,14 +87,22 @@ Finally, we can observe our vehicle information on the plots, especially it's co
 
 
 Trobleshooting which I was encountering with:
-1. KIvy GUI is not the best framework for developing of Digital clusters. It works, but initially I preferred to add map
-    as one of the screen widget, but App could not coupe with it, it significantly was loosing speed af CAN data processing
-2. Power supply of RPI4 and A9G, Neo6m. If Raspberry Pi needs strict 5v current and takes 0.6A during loading OS it can impact
-    our additional components if all of them are supplied with that same source. A6G and Neo6m demands 0.25A 5v current and if
-    it changes a little bit during RPI4 load, it loses signal and can't connect with network or satellites.
-3. Difference between Linux and Windows. Python is that same, but Linux has much wider variety of libraries. For CAN bus 
-    exists good enough official library python-can and not published library from Peek-System company PCANBasic which we have 
-    to assemble on our owns. This last works perfect for me and did not have troubles as other one which might rise up an 
-    error: CAN bus was read to late with refer to cannotifier.py and its timeout
-4. different pixel grid on laptop and rpi4 screen
-5. Connect A9G, Neo6m to rpi4 and make it work together via UART 
+Kivy GUI Limitations: Kivy is not the ideal framework for developing digital clusters. Although it works, I initially 
+intended to add a map as one of the screen widgets. However, the app struggled with performance, 
+leading to significant slowdowns in CAN data processing.
+
+Power Supply for RPI4, A9G, and Neo6m: The Raspberry Pi 4 requires a strict 5V current and draws 0.6A during OS boot. 
+This can impact additional components if they share the same power source. The A9G and Neo6m require 0.25A at 5V each. 
+Any fluctuation in power supply during Raspberry Pi load can cause signal loss and connectivity issues with networks 
+or satellites.
+
+Differences Between Linux and Windows: While Python itself is consistent across platforms, Linux offers a wider variety of libraries. 
+For CAN bus functionality, the official python-can library is available, whereas the Peek-System company’s PCANBasic library, 
+which we had to compile ourselves, works better for our needs. This last works perfect for me and did not have troubles
+as other one which might rise up an error: CAN bus was read to late with refer to cannotifier.py and its timeout
+
+Different Pixel Grid on Laptop and RPi4 Screen: There is a discrepancy between the pixel grids of the laptop and
+the Raspberry Pi 4 screen, which affects the visual consistency and layout of the GUI.
+
+Connecting A9G and Neo6m to RPi4 via UART: Successfully connecting the A9G and Neo6m modules to the Raspberry Pi 4 
+and ensuring they work together via UART required careful configuration 

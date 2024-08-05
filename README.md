@@ -44,7 +44,8 @@ engineering approach as long as this information, which CAN bus messages belong 
 You have to read a half of relevant internet sources and books. 
 I can recommend to start from here: https://www.carhackingvillage.com/getting-started.
 
-And highly recommend this book
+And highly recommend this book:
+
 ![](CANhaking.png)
 
 A lot of information about how do automotive network is designed and works.

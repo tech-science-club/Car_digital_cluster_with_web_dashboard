@@ -34,7 +34,7 @@ This setup can generate random CAN messages and send them to our CANable module.
 As we were able to connect and read data, we could proceed to connect to the car, read the CAN bus using the 
 CANable adapter, and use the CANViewer software.
 
-https://www.youtube.com/watch?v=znYXwvMBHLY
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/znYXwvMBHLY/0.jpg)](https://www.youtube.com/watch?v=znYXwvMBHLY)
 
 As we know (or for those new to the field), information among vehicle modules is exchanged via CAN bus messages. 
 Similar to our computer networks, but instead of PCs as users, there are numerous microcontrollers and modules. 
@@ -86,6 +86,7 @@ CO2 emissions, and GPS tracking.
 ![](web1.png)![](web2.png)![](web3.png)
 
 review on youtube:
+
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/e2QAAOhgJqs/0.jpg)](https://www.youtube.com/watch?v=e2QAAOhgJqs)
 
 Trobleshooting which I was encountering with:

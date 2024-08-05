@@ -1,11 +1,12 @@
 import re
-import threading
+from threading import Thread
 import time
 from io import BytesIO
 import obd
 import numpy as np
 import requests
 import serial
+from can import Message
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.core.window import Window
@@ -52,28 +53,28 @@ from kivy_garden.mapview import MapView, MapMarkerPopup
 # import pyrebase
 from kivy.core.text import LabelBase
 from matplotlib import pyplot as plt
+import can
 
 LabelBase.register("01_DigiGraphics",
-                   fn_regular="C:\\Users\\admin\\PycharmProjects\\dashpanel\\01-digitgraphics\\01_DigiGraphics.mtt")
+                   fn_regular="C:/Users/User/PycharmProjects/Car_Dashboard_with_web_access_clone/01-digitgraphics/01_DigiGraphics.mtt")
 LabelBase.register("Hemi-Head",
-                   fn_regular="C:\\Users\\admin\\PycharmProjects\\dashpanel\\Hemi-Head\\Hemi Head\\hemi head bd it.ttf")
+                   fn_regular="C:/Users/User/PycharmProjects/Car_Dashboard_with_web_access_clone/Hemi-Head/Hemi Head/hemi head bd it.ttf")
 LabelBase.register("lcd14",
-                   fn_regular="C:\\Users\\admin\\PycharmProjects\\dashpanel\\lcd\\lcd-font\\otf\\LCD14.otf")  # "C:\Users\admin\PycharmProjects\smart home\01-digitgraphics\01_DigiGraphics.mtt"
+                   fn_regular="C:/Users/User/PycharmProjects/Car_Dashboard_with_web_access_clone/lcd/LCD14.otf")  # "C:\Users\admin\PycharmProjects\smart home\01-digitgraphics\01_DigiGraphics.mtt"
 Window.size = (1200, 700)
 
+#bus = can.interface.Bus(interface='pcan', channel='PCAN_USBBUS1', can_filters=filter)
 
 class Main(MDFloatLayout):
     pass
-
-
 class Dash_Board(MDFloatLayout):
     rpm = 0
     speed = 0
     t = 0
     fuel = 0
+    boost = 0
     widget_name = None
-
-
+    arrow_angle = 0
 class Classic_style_dash_board(MDScreen):
     latitude = NumericProperty()
     longitude = NumericProperty()
@@ -243,20 +244,12 @@ class Classic_style_dash_board(MDScreen):
         # else:
 
         # return super(Dash_Board, self).on_touch_down(touch)
-
-
 class Scale(MDFloatLayout):
     pass
-
-
 class Ruler(MDFloatLayout):
     pass
-
-
 class Map(MDFloatLayout):
     pass
-
-
 class LBl(MDFloatLayout):
     def __init__(self, **kwargs):
         super(LBl, self).__init__(**kwargs)
@@ -273,8 +266,6 @@ class LBl(MDFloatLayout):
     # shift1 = Animation( pos=(46, 44),duration=1.0, t='in_out_elastic')
     # shift1.start(self.ids.lbl2)
     # print(self.canvas.children)
-
-
 class Digital_box(MDLabel):
     def __init__(self, **kwargs):
         super(Digital_box, self).__init__(**kwargs)
@@ -299,8 +290,6 @@ class Digital_box(MDLabel):
         self.add_widget(self.lbl_kmh)
         self.add_widget(self.lbl_tacho)
         self.add_widget(self.lbl_rpm)
-
-
 class Speedometr(MDFloatLayout):
     w = NumericProperty()
     kmh = "0"
@@ -331,8 +320,6 @@ class Speedometr(MDFloatLayout):
 
     def update_value(self, *args):
         self.w = float(Dash_Board.speed) * 260 / 200  # ----------------> speedometer's arrow
-
-
 class Tachometr(MDFloatLayout):
     rpm = NumericProperty(0)
     rpm_lbl = StringProperty()
@@ -358,9 +345,7 @@ class Tachometr(MDFloatLayout):
             Ellipse(size=(220, 220), pos=(825, 245))
 
     def update_value(self, *args):
-        self.rpm = float(Dash_Board.rpm) * 243 / 7000
-
-
+        self.rpm = float(Dash_Board.arrow_angle) * 243 / 7000
 class Speed_rpm_labels(MDFloatLayout):
     kmh = NumericProperty(0)
 
@@ -374,8 +359,6 @@ class Speed_rpm_labels(MDFloatLayout):
         self.ids.speed_lbl.text = str(self.val_data.speed)
         self.ids.rpm_lbl.text = str(round(float(Dash_Board.rpm)))
         # print(self.kmh)
-
-
 class Sport_style_dash_board(MDScreen):
     x_rpm_scale = NumericProperty()
     rotate = NumericProperty()
@@ -462,8 +445,6 @@ class Sport_style_dash_board(MDScreen):
                 self.manager.transition.direction = "left"
                 self.dialog.dismiss()
             return True #  # S
-
-
 class Gauge_temp(MDFloatLayout):
     x_coolant_temp = NumericProperty()
 
@@ -472,29 +453,25 @@ class Gauge_temp(MDFloatLayout):
         Clock.schedule_interval(self.coolant_temp, 0.1)
 
     def coolant_temp(self, dt):
-        n = np.random.randint(0, 100)
-        self.x_coolant_temp = int(Dash_Board.t) * 180 / 110
+
+        self.x_coolant_temp = int(Dash_Board.t)*130/180
         self.ids.temp_label.text = str(Dash_Board.t)
-
-
 class Gauge_tank(MDFloatLayout):
     x_tank = NumericProperty()
 
     def __init__(self, **kwargs):
         super(Gauge_tank, self).__init__(**kwargs)
-        Clock.schedule_interval(self.tank, 0.1)
+        Clock.schedule_interval(self.tank, 0.05)
 
     def tank(self, dt):
-        n = np.random.randint(0, 100)
-        self.x_tank = n
-
-
+        #n = np.random.randint(0, 100)
+        self.x_tank = Dash_Board.fuel * 180/100
 class Oil_gauge(MDFloatLayout):
     angle_oil_pressure = NumericProperty()
 
     def __init__(self, **kwargs):
         super(Oil_gauge, self).__init__(**kwargs)
-        Clock.schedule_interval(self.arrow, 0.1)
+        #Clock.schedule_interval(self.arrow, 0.1)
 
     # def on_touch_down(self, touch):
     #    print(touch.pos)
@@ -502,22 +479,18 @@ class Oil_gauge(MDFloatLayout):
         #    data =
         n = np.random.randint(0, 180)
         self.angle_oil_pressure = n
-
-
 class Turbo_presure_gauge(MDFloatLayout):
     angle_turbo_pressure = NumericProperty()
 
     def __init__(self, **kwargs):
         super(Turbo_presure_gauge, self).__init__(**kwargs)
-        Clock.schedule_interval(self.arrow, 0.1)
+        Clock.schedule_interval(self.arrow, 0.01)
 
     # def on_touch_down(self, touch):
     #    print(touch.pos)
     def arrow(self, dt):
-        n = np.random.randint(0, 270)
-        self.angle_turbo_pressure = n
-
-
+        #n = np.random.randint(0, 270)
+        self.angle_turbo_pressure = int(Dash_Board.boost)*180/100
 class Engine(MDScreen):
 
     def __init__(self, **kwargs):
@@ -595,9 +568,6 @@ class Engine(MDScreen):
                 self.manager.transition.direction = "left"
                 self.dialog.dismiss()
             return True
-
-
-
 # -----------------> Widgets of 3d Screen are bellow (Coolant temp, gearbox temp, Voltage, Oil pressure, Turbo)
 class Temp(MDFloatLayout, TouchBehavior):
     dialog = None
@@ -638,8 +608,6 @@ class Temp(MDFloatLayout, TouchBehavior):
         # if self.dialog:
         plot_box = self.dialog.content_cls
         plot_box.stop_process()
-
-
 class Gear_box_oil(MDFloatLayout, TouchBehavior):
     dialog = None
 
@@ -676,8 +644,6 @@ class Gear_box_oil(MDFloatLayout, TouchBehavior):
         # if self.dialog:
         plot_box = self.dialog.content_cls
         plot_box.stop_process()
-
-
 class Voltmetr(MDFloatLayout, TouchBehavior):
     dialog = None
 
@@ -714,8 +680,6 @@ class Voltmetr(MDFloatLayout, TouchBehavior):
         # if self.dialog:
         plot_box = self.dialog.content_cls
         plot_box.stop_process()
-
-
 class oil_pressure(MDFloatLayout, TouchBehavior):
     dialog = None
 
@@ -752,8 +716,6 @@ class oil_pressure(MDFloatLayout, TouchBehavior):
         # if self.dialog:
         plot_box = self.dialog.content_cls
         plot_box.stop_process()
-
-
 class turbo_pressure(MDFloatLayout, TouchBehavior):
     dialog = None
 
@@ -790,7 +752,6 @@ class turbo_pressure(MDFloatLayout, TouchBehavior):
         # if self.dialog:
         plot_box = self.dialog.content_cls
         plot_box.stop_process()
-
 # -------------------------> plotting of incoming data. Class is evoked from MDDialog as custom class
 class Plot_box(MDFloatLayout):
     y = NumericProperty(0)
@@ -865,24 +826,48 @@ class Plot_box(MDFloatLayout):
         print("stop, lists are: ")
         print(self.x_axes)
         print(self.y_axes)
-
+class Can_bus_data(can.Listener):
+    def on_message_received(self, msg: Message) -> None:
+        if msg.arbitration_id == 0x316 and msg is not None:    
+            Dash_Board.rpm = msg.data[3] * 7000 / 110               # ---------------engine rpm
+            print("rpm: ", Dash_Board.rpm)
+            Dash_Board.arrow_angle = Dash_Board.rpm           
+            #Dash_Board.rpm = round(Dash_Board.rpm / 50) * 50
+        elif msg.arbitration_id == 0x1F1 and msg is not None:
+            Dash_Board.speed = round(msg.data[4]*220/100)           #----------------vehicle speed
+            print("speed: ", Dash_Board.speed)
+        elif msg.arbitration_id == 0x0A0 and msg is not None:
+            Dash_Board.t = round(msg.data[1] - 40)                  #---------------- collant t
+            print("temp: ", Dash_Board.t)
+        elif msg.arbitration_id == 0x0A1 and msg is not None:
+            Dash_Board.boost = round(msg.data[4])                  #---------------- boost
+            print("boost: ", Dash_Board.boost)
+        elif msg.arbitration_id == 0x350 and msg is not None:
+            Dash_Board.fuel = round(msg.data[3])                  #---------------- tank
+            print("tank: ", Dash_Board.fuel)
+        else:
+            print("No message recieved")
 
 class Dashboard_project(MDApp):
-    # Dash_Board.val = 0
-    cnt = True
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def build(self):
+        #Can_bus_data()
         # obd.logger.setLevel(obd.logging.DEBUG)
-        # self.connection = obd.OBD(portstr="COM3", fast=False, timeout=30)
-        # self.connection = obd.OBD(portstr="COM9")
+        #self.connection = obd.OBD(portstr="COM1", fast=False, timeout=30)
+        #self.connection = obd.OBD(portstr="COM3")  # -------------> elm 327 usb
         # self.Arduino_Data = serial.Serial("com2", 115200)
-        self.connection = obd.OBD(portstr="COM9")
+        #self.connection = obd.OBD(portstr="COM9")
         self.FLOATING_POINT_PATTERN = r"-?\d+\.\d+|-?\d+"
         # self.Arduino_Data = serial.Serial("com2", 115200)
-        Clock.schedule_interval(self.data, 0.001)
+        #Clock.schedule_interval(self.data, 0.001)
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Red"
 
+        Thread(target=self.Main(),daemon=True).start()
+        #self.Main()
+        
         sm = ScreenManager()
 
         sm.add_widget(Classic_style_dash_board(name="dash1"))
@@ -890,7 +875,6 @@ class Dashboard_project(MDApp):
         sm.add_widget(Engine(name="dash3"))
 
         return sm
-
     def data(self, dt):
         rpm_raw = self.connection.query(obd.commands.RPM)
         speed_raw = self.connection.query(obd.commands.SPEED)
@@ -906,6 +890,7 @@ class Dashboard_project(MDApp):
         ## Join values with units
         try:
             Dash_Board.rpm = int(float(', '.join(rpm_values)))
+            Dash_Board.arrow_angle = Dash_Board.rpm
             Dash_Board.rpm = round(Dash_Board.rpm / 50) * 50
             Dash_Board.speed = int(float(', '.join(speed_values)))
             Dash_Board.t = ', '.join(coolant_temp_values)
@@ -919,6 +904,33 @@ class Dashboard_project(MDApp):
             print(Dash_Board.t)
         except Exception as e:
             print("Error:", e)
+    def recieve_message(self, dt):
+
+        msg = self.bus.recv(0.5)
+        if msg.arbitration_id == 0x316 and msg is not None:
+            Dash_Board.rpm = msg.data[3] * 7000 / 100
+            print("rpm: ", Dash_Board.rpm)
+        elif msg.arbitration_id == 0x1F1 and msg is not None:
+            Dash_Board.speed = msg.data[4]
+            print("speed: ", Dash_Board.speed)
+        else:
+            print("No message recieved")
+    def Main(self):
+        self.filter = [
+            {"can_id": 0x316, "can_mask": 0x7FF, "extended": False},  # ,  # Передача 11-битного ID 0x451
+            {"can_id": 0x1F1, "can_mask": 0x7FF, "extended": False},
+            {"can_id": 0x0A0, "can_mask": 0x7FF, "extended": False},
+            {"can_id": 0x0A1, "can_mask": 0x7FF, "extended": False},
+            {"can_id": 0x848, "can_mask": 0x7FF, "extended": False}
+            # {"can_id": 0xA0000, "can_mask": 0x1FFFFFFF, "extended": True},  # Передача 29-битного ID 0xA0000
+        ]
+
+        # with can.Bus(interface='pcan', channel='PCAN_USBBUS1', receive_own_messages=True, filters=filter) as bus:
+        self.bus = can.interface.Bus(interface='pcan', channel='PCAN_USBBUS1', can_filters=self.filter)
+        #Clock.schedule_interval(self.recieve_message, 0.01)
+        #self.recieve_message()
+        listener = Can_bus_data()
+        notifier = can.Notifier(self.bus, [listener])
 
     #    if self.cnt:
     #        Dash_Board.val += 1
@@ -944,4 +956,6 @@ class Dashboard_project(MDApp):
 
 
 if __name__ == '__main__':
+    #Can_bus_data()
     Dashboard_project().run()
+

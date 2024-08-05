@@ -85,6 +85,8 @@ CO2 emissions, and GPS tracking.
 
 ![](web1.png)![](web2.png)![](web3.png)
 
+review on youtube:
+https://youtu.be/e2QAAOhgJqs?si=AmgrX_ucI9Z73WQM
 
 Trobleshooting which I was encountering with:
 Kivy GUI Limitations: Kivy is not the ideal framework for developing digital clusters. Although it works, I initially 

@@ -63,4 +63,34 @@ In the end I have got the App with 3 screens, which we can shift calling popup d
 
 ![](3screen.png)
 
+Basically it works pretty well. 
+Before CAN bus I had tried to read off data via OBDII interface with Python OBD library. It works, but my possibilities 
+were limited with accessible PIDs. Only 7 data types 
+with CAN bus we can get much more, the most difficult part is to encrypt messages and extract desirable information from 
+there.
 
+The retrieved CAN bus data App processes and send data to web server.
+PHP scripts manages data inserting it from GSM module into database, extracts from DB and builds correspondant plots
+with JS scripts.
+
+http://vehicledata.atwebpages.com/index.html
+
+Finally, we can observe our vehicle information on the plots, especially it's consumption and emition of CO2, GPS tracking
+
+
+
+![](web1.png)![](web2.png)![](web3.png)
+
+
+Trobleshooting which I was encountering with:
+1. KIvy GUI is not the best framework for developing of Digital clusters. It works, but initially I preferred to add map
+    as one of the screen widget, but App could not coupe with it, it significantly was loosing speed af CAN data processing
+2. Power supply of RPI4 and A9G, Neo6m. If Raspberry Pi needs strict 5v current and takes 0.6A during loading OS it can impact
+    our additional components if all of them are supplied with that same source. A6G and Neo6m demands 0.25A 5v current and if
+    it changes a little bit during RPI4 load, it loses signal and can't connect with network or satellites.
+3. Difference between Linux and Windows. Python is that same, but Linux has much wider variety of libraries. For CAN bus 
+    exists good enough official library python-can and not published library from Peek-System company PCANBasic which we have 
+    to assemble on our owns. This last works perfect for me and did not have troubles as other one which might rise up an 
+    error: CAN bus was read to late with refer to cannotifier.py and its timeout
+4. different pixel grid on laptop and rpi4 screen
+5. Connect A9G, Neo6m to rpi4 and make it work together via UART 

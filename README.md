@@ -18,7 +18,7 @@ link: https://www.raspberrypi.com/products/raspberry-pi-4-model-b/
 To communicate with CAN bus on the vehicle was chosen CANable adapter. Easy to use, cheap and can interact with CANViewer
 and Python-can library
 
-![](CANable.jpg)
+![](CANable.png)
 
 To send data via GSM I have been using A9GTkinter module
 link: https://docs.ai-thinker.com/gprs 

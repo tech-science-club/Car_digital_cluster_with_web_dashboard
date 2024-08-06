@@ -69,6 +69,7 @@ LabelBase.register("Hemi-Head",
                    fn_regular="C:\\Users\\admin\\PycharmProjects\\dashpanel\\Hemi-Head\\Hemi Head\\hemi head bd it.ttf")
 LabelBase.register("lcd14",
                    fn_regular="C:\\Users\\admin\\PycharmProjects\\dashpanel\\lcd\\lcd-font\\otf\\LCD14.otf")
+# for Windows path--------------
 #abelBase.register("01_DigiGraphics",
 #                  fn_regular="/home/admin/Downloads/Car_Dashboard_with_web_access/01-digitgraphics/01 DigiGraphics.ttf")
 #abelBase.register("Hemi-Head",
@@ -135,7 +136,7 @@ Builder.load_string('''
         Rectangle:
             pos: self.x+220, self.y+50
             size: 600, 600
-            source: "rpm.png" #---------------------------needs modification
+            source: "rpm.png" 
 
     MDLabel:
         id: speed
@@ -207,19 +208,6 @@ Builder.load_string('''
         Ellipse:
             size: 220,220
             pos: 710, 245
-
-
-<Map>:
-
-    MDAnchorLayout:
-        id: map_widget
-        size_hint: 0.65, 0.45
-        pos_hint: {"center_x": 0.5, "center_y": 0.5}
-        MapView:
-            id: map
-            pos_hint: {"center_x": 0.5, "center_y": 0.5}
-            size:  self.parent.size
-            zoom:15
 
 <Speedometr>:
 
@@ -884,6 +872,7 @@ class Dash_Board(Thread):
 
     def __init__(self, **kwargs):
         Thread.__init__(self)
+        # to check values accessibility in global scope uncoment bellow  
         # Clock.schedule_interval(self.print_data, 0.001)
 
     # def print_data(self, dt):
@@ -895,8 +884,6 @@ class Dash_Board(Thread):
 class Classic_style_dash_board(MDScreen):
     latitude = NumericProperty()
     longitude = NumericProperty()
-    lat = NumericProperty()
-    lon = NumericProperty()
     my_list = ListProperty()
 
     def __init__(self, **kwargs):
@@ -912,9 +899,6 @@ class Classic_style_dash_board(MDScreen):
         self.add_widget(self.center_rings)
         self.speed_lable = Speed_rpm_labels()
         self.add_widget(Speed_rpm_labels())
-
-        # self.map = Map()                                                #----------------------set map
-
         self.tachometr = Tachometr()
         self.speedometr = Speedometr()
 
@@ -942,46 +926,9 @@ class Classic_style_dash_board(MDScreen):
         self.speedometr = Speedometr()
         if float(Dash_Board.speed) > 10 and not self.scheduled and not self.scheduled_2:
             self.remove_widget(self.stock_box)
-            self.add_widget(self.map, 6)  # was 4 ------------------------> remove car image and add map
+            self.add_widget(self.map, 6)
             self.scheduled = True
             self.scheduled_2 = True
-
-        # if float(self.val_pattern.speed) > 25 and self.flag and self.flag2:
-        # self.remove_widget(self.back_ground_circle)
-        # self.remove_widget(self.center_rings)
-        # self.remove_widget(self.stock_box)
-        # self.add_widget(self.map, 6)
-
-        # zoom = Animation(size_hint=(0.95, 0.6), duration=1.0, t='in_out_elastic')
-        # zoom.start(self.map.ids.map_widget)
-        # self.flag = True
-        # self.flag2 = True
-
-        # changes = Animation(size_hint=(200, 200), pos=(46, 44), duration=1.0, t='in_out_elastic')
-        # changes.start(self.speedometr.ids.speed_img)
-        # #arrow = Animation(size=(513 / 6, 139 / 6), pos=(40, 130), duration=1.0, t='in_out_elastic')
-        # #arrow.start(self.ids.arrow1)
-        # #self.speedometr.remove_widget(self.speedometr.ids.arrow1)
-        # self.speedometr.canvas.clear()
-        # with self.speedometr.canvas.before:
-        # Color(0, 0, 0, 1)
-        # Ellipse(pos=(49,48), size=(190,190))
-        # Color(1, 0, 0, 1)
-        # Ellipse(pos=(49,48), size=(190,190), angle_start = 235, angle_end = 235 + self.speedometr.w) # ---------> speed arrow settings
-        # Color(0, 0, 0, 1)
-        # Ellipse(pos=(61, 59), size=(170,170))
-
-        # with self.speedometr.canvas.after:
-        # Color(0.1, 0.1, 0.1, 1)
-        # Ellipse(pos=(80,78), size=(130,130))
-
-        # elif float(self.val_pattern.speed) <=25 and not self.flag and self.flag2:
-        # self.remove_widget(self.map)
-        # self.add_widget(self.stock_box)
-        # self.add_widget(self.back_ground_circle, 7)
-        # self.add_widget(self.center_rings,2)
-        # self.flag = True
-        # self.flag2 = False
 
         elif float(Dash_Board.speed) <= 10 and not self.scheduled and self.scheduled_2:
             self.remove_widget(self.map)
@@ -992,9 +939,6 @@ class Classic_style_dash_board(MDScreen):
 
         elif float(Dash_Board.speed) <= 10 and self.scheduled:
             self.scheduled = False
-
-        # elif float(self.val_pattern.speed) <= 25 and self.flag:
-        # self.scheduled = False
 
     def on_touch_down(self, touch):
         print(touch.pos)
@@ -1151,69 +1095,6 @@ class GSM(Thread):
         command += self.delim
         self.send_gsm_command(command)
         # print("send command: ",command)
-
-
-class Scale(MDFloatLayout):
-    pass
-
-
-class Ruler(MDFloatLayout):
-    pass
-
-
-class Map(MDFloatLayout):
-    def __init__(self, **kwargs):
-        super(Map, self).__init__(**kwargs)
-        self.new_longitude = 0
-        self.new_latitude = 0
-        self.longitude = Dash_Board.lon
-        self.latitude = Dash_Board.lat
-        self.marker = MapMarkerPopup(lat=self.latitude, lon=self.longitude, source='android_marker.png')
-        self.ids.map.add_widget(self.marker)
-        self.thread_ = threading.Thread(target=self.start_updt_widget, daemon=True)
-        self.thread_.start()
-
-    def start_updt_widget(self):
-        Clock.schedule_interval(self.start_map, 0.05)
-
-    def start_map(self, dt):
-        # if Dash_Board.speed > 25:
-        # self.ids.map.clear_widgets()
-        # zoom = Animation(size_hint=(0.95, 0.9), duration=1.0, t='in_out_elastic')
-        # zoom.start(self.ids.map_widget)
-        # self.ids.map.add_widget(self.marker)
-
-        # self.longitude = Dash_Board.lon
-        # self.latitude = Dash_Board.lat
-
-        # self.marker.lat = self.longitude
-        # self.marker.lon = self.latitude
-
-        # print(Dash_Board.lat, ' ',Dash_Board.lon)
-
-        # if self.new_longitude != self.longitude and self.new_latitude != self.latitude:
-
-        # self.new_longitude = self.longitude
-        # self.new_latitude = self.latitude
-
-        # self.marker.lat = self.new_longitude
-        # self.marker.lon = self.new_latitude
-
-        # self.ids.map.center_on(self.new_latitude, self.new_longitude)
-
-        self.ids.map.center_on(Dash_Board.lat, Dash_Board.lon)
-        self.marker.lat = Dash_Board.lat
-        self.marker.lon = Dash_Board.lon
-
-    def update_marker(self, lat, lon):
-        # Update the marker position with new GPS data
-        lat = self.new_latitude
-        lon = self.new_longitude
-        self.ids.map.lat = self.new_longitude
-        self.ids.map.lon = self.new_latitude
-
-    def update_position(self, lat, lon):
-        self.ids.marker_pos.center_on(self.new_latitude, self.new_longitude)
 
 
 class Center_rings(MDFloatLayout):
@@ -2175,16 +2056,16 @@ class Dashboard(MDApp):
 if __name__ == '__main__':
     # -------------------- launching treads of reading data classes
 
-    #bus = Read_bus_data()
-    #gps = GPS()
-    #gsm = GSM()
-
-    #db = Dash_Board()
-
-    #bus.start()
-    #db.start()
-    #gps.start()
-    #gsm.start()
+   # bus = Read_bus_data()
+   # gps = GPS()
+   # gsm = GSM()
+   #
+   # db = Dash_Board()
+   #
+   # bus.start()
+   # db.start()
+   # gps.start()
+   # gsm.start()
 
     Dashboard().run()
 

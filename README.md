@@ -26,6 +26,9 @@ This setup can generate random CAN messages and send them to our CANable module.
 
 ![](ATMega2560+MCP2515_.png)
 
+Common wiring diagram looks like that:
+
+![](rpi4_a9g_gsm6m_CANable.png)
 
 Python and its GUI framework Kivy as developing tool.
 In the end was gotten app with 3 screens

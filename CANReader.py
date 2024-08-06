@@ -7,7 +7,7 @@ from threading import Thread
 class Dash_Board(Thread):
     rpm = 0
     speed = 0
-    t = 21
+    t =0
     fuel = 0
     consm = 0
     arrow_angle = 0

@@ -20,7 +20,8 @@ To read GPS data I have chosen well known and good recommended Neo6m GPS tracker
 
 ![](neo6m.webp)
 
-To debug our CAN module and verify its functionality was being used an Arduino Mega and MCP2515. 
+To debug our CAN module and verify its functionality was being used an Arduino Mega and MCP2515.
+
 This setup can generate random CAN messages and send them to our CANable module.
 
 ![](ATMega2560+MCP2515_.png)

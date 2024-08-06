@@ -33,12 +33,11 @@ Common wiring diagram looks like that:
 Code structure looks like on following screens. I can't reveal all details, but will share with most important ones:
 CAN reader, GSM/GPS module interaction.
 
-![](code screen 3.png)
+![](code_screen_3.png)
 
-![](code screen 2.png)
+![](code_screen_2.png)
 
-![](code screen.png)
-
+![](code_screen.png)
 
 Python and its GUI framework Kivy as developing tool.
 In the end was gotten app with 3 screens

@@ -1,4 +1,4 @@
-Car Digital Cluster, Web dashboard with relevant information from CAN bus.
+#Car Digital Cluster, Web dashboard with relevant information from CAN bus.
 
 
 The working platform is Raspberry Pi 4

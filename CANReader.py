@@ -1,4 +1,5 @@
 #Example of CAN bus Reader based on PCANBasic.py
+import threading
 
 from PCANBasic import *
 from threading import Thread
